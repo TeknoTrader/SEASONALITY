@@ -1,3 +1,5 @@
+# Please note that the code is now incomplete and that it is a work in progress!!!
+
 import yfinance as yf
 import matplotlib.pyplot as plt
 from datetime import date
