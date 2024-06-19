@@ -1,3 +1,7 @@
+git clone git://github.com/lukaszbanasiak/yhoo-finance.git
+git clone git://github.com/lukaszbanasiak/yhoo-finance.git
+python setup.py install
+
 import streamlit as st
 import yfinance as yf
 from datetime import date
