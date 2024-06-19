@@ -1,7 +1,5 @@
-requirements.txt
-streamlit>=0.78.0
-yfinance
-
+#I need to add requirements.txt in order to make the web app visible to everybody 
+ 
 import streamlit as st
 import yfinance as yf
 from datetime import date
