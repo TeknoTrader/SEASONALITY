@@ -1,6 +1,6 @@
-git clone git://github.com/lukaszbanasiak/yhoo-finance.git
-git clone git://github.com/lukaszbanasiak/yhoo-finance.git
-python setup.py install
+requirements.txt
+streamlit>=0.78.0
+yfinance
 
 import streamlit as st
 import yfinance as yf
