@@ -1,7 +1,7 @@
 #I need to add requirements.txt in order to make the web app visible to everybody 
+Python >= 2.7, 3.4+
 numpy~=1.26.4
 pandas~=2.2.2
-Python >= 2.7, 3.4+
 requests >= 2.31
 multitasking >= 0.0.7
 lxml >= 4.9.1
