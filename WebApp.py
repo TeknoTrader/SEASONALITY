@@ -18,7 +18,7 @@ st.write("\nFine rilevazione al: \t", end)
 
 ticker = "GOOG" #st.text_input("Inserisci il ticker: ")
 # Preliminary download of data 'GOOG'
-data = yf.download(ticker)
+data = yf.download("GOOG)
 # Find the first data avaible, to avoid errors
 first_date = data.index[0]
 st.write("Data of ",ticker, " avaible from: ",first_date.date())
