@@ -2,7 +2,6 @@
 numpy~=1.26.4
 pandas~=2.2.2
 Python >= 2.7, 3.4+
-Numpy >= 1.16.5
 requests >= 2.31
 multitasking >= 0.0.7
 lxml >= 4.9.1
