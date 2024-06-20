@@ -1,5 +1,10 @@
 #I need to add requirements.txt in order to make the web app visible to everybody 
- 
+numpy~=1.26.4
+pandas~=2.2.2
+yfinance~=0.2.40
+matplotlib~=3.9.0
+streamlit~=1.35.0
+
 import streamlit as st
 import yfinance as yf
 from datetime import date
