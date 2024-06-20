@@ -1,19 +1,4 @@
 #I need to add requirements.txt in order to make the web app visible to everybody 
-Python >= 2.7, 3.4+
-numpy~=1.26.4
-pandas~=2.2.2
-requests >= 2.31
-multitasking >= 0.0.7
-lxml >= 4.9.1
-appdirs >= 1.4.4
-pytz >=2022.5
-frozendict >= 2.3.4
-peewee >= 3.16.2
-beautifulsoup4 >= 4.11.1
-html5lib >= 1.1
-yfinance~=0.2.40
-matplotlib~=3.9.0
-streamlit~=1.35.0
 
 import streamlit as st
 import yfinance as yf
