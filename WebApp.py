@@ -150,7 +150,7 @@ st.title("OVERALL AVERAGE RETURN MONTHS:")
 #for i in MesiComplessivi:
  # color.append(Color("red","green",i,0.0))
 #st.barh(NomiMesi2,MesiComplessivi,color = color)
-st.bar_chart(dict(zip(np.array(NomiMesi2), np.array(MesiComplessivi))), xlabel = "Months", ylabel = "Returns")
+st.bar_chart(dict(zip(np.array(NomiMesi2), np.array(MesiComplessivi))))
 #plt.axvline(0,color = "blue")
 #plt.xlabel("Rendimenti")
 #plt.ylabel("Anni")
