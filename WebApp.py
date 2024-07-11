@@ -1,24 +1,25 @@
-#I need to add requirements.txt in order to make the web app visible to everybody 
+# NB: used pip freeze to get requirements.txt
 
 import streamlit as st
 import yfinance as yf
+# import matplotlib.pyplot as plt
 from datetime import date
 import numpy as np
 import pandas as pd
 
-AnnoPartenz = st.number_input("Anno di partenza: ",)
+AnnoPartenz = st.number_input("Starting year: ",min_value = 1850, step = 1)
 
-AnnoFin = st.number_input("Anno di fine: ", min_value = 2000)
+AnnoFin = st.number_input("End year: ", min_value = 1900, step = 1)
 AnnoFine = int(AnnoFin)
 end = date(AnnoFine, 1, 1)
-st.write("\nFine rilevazione al: \t", end)
+st.write("\nEnd of the relevation: \t", end)
 
 # Testo un attimo l'estrazione di informazioni, quali mesi ed anni
 # print(end.month)
 
-ticker = "GOOG" #st.text_input("Inserisci il ticker: ")
+ticker = st.text_input("Insert the TICKER: ")
 # Preliminary download of data 'GOOG'
-data = yf.download("GOOG")
+data = yf.download(ticker)
 # Find the first data avaible, to avoid errors
 first_date = data.index[0]
 st.write("Data of ",ticker, " avaible from: ",first_date.date())
@@ -33,9 +34,9 @@ else:
 # Another control to do
 if year >= AnnoFine:
   st.write("\n\tATTENTION!!!\nYou have to choose a data that is ABOVE ", {year})
-  AnnoFine = int(input("Anno di fine: \n"))
+  AnnoFine = int(input("End year: \n"))
 end = date(AnnoFine, 1, 1)
-st.write("\nFine rilevazione al: \t", end)
+st.write("\nEnd year at: \t", end)
 
 #Inizialization
 Annate1 = list(range(AnnoPartenza, AnnoFine))
@@ -47,7 +48,7 @@ for i in Annate1:
 
 #Now we download the serious data
 inizio = date( AnnoPartenza, 1, 1)
-st.write("\nInizio calcolo dal: \t",inizio)
+st.write("\nStarting calculations from: \t",inizio)
 
 df = yf.download(ticker, start = inizio, end = end, interval = "1mo")
 
@@ -128,12 +129,12 @@ for i in range (1,13):
     colori.append(Color("#FF0000","#0000FF",Y,0))
 
 # Defining a good title, to make everything more clear
-  st.write("# RITORNI MENSILI DEL MESE ",NomiMesi1[i-1],"\n")
+  st.write("# MONTHLY RETURNS on the month of: ",NomiMesi1[i-1],"\n")
   st.write("# WIN RATE: ",round(WinRate(Mese),2), "%\n")
   st.write("# AVERAGE RETURN: ",round(Media(Mese),2), "%\n")
   st.write("Better excursion: ",round(max(Mese),2),"%")
   st.write("Worst excursion:  ", round(min(Mese),2), "%")
-  #st.xlabel("Anni")
+  #st.xlabel("Anni")C:\Users\tekno\PycharmProjects\Streamlit\Seasonality.py [ARGUMENTS]
   #st.ylabel("Rendimenti")
   MesiComplessivi.append(round(Media(Mese),2))  # Add to the array the value for the next chart
   #st.show()  # Show the chart
@@ -141,15 +142,3 @@ for i in range (1,13):
   st.write (len (colori))
   st.bar_chart(dict(zip(np.array(Annate), np.array(Mese)))) #,color=colori) # Plot the bar chart of the results
   #st.axhline(0,color = "green")  # Horizontal line, to see better where are the positive and negative returns
-
-NomiMesi2 = ["Jan","Feb","Mar","Apr","May","JuN","JuL","Aug","Sept","Oct","Nov","Dec"]  # Abbreviated month's name
-
-#st.title("Rendimento complessivo mesi")
-#color = []
-#for i in MesiComplessivi:
- # color.append(Color("red","green",i,0.0))
-#st.barh(NomiMesi2,MesiComplessivi,color = color)
-#plt.axvline(0,color = "blue")
-#plt.xlabel("Rendimenti")
-#plt.ylabel("Anni")
-#plt.show()
