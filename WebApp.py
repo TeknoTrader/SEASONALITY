@@ -142,3 +142,16 @@ for i in range (1,13):
   st.write (len (colori))
   st.bar_chart(dict(zip(np.array(Annate), np.array(Mese)))) #,color=colori) # Plot the bar chart of the results
   #st.axhline(0,color = "green")  # Horizontal line, to see better where are the positive and negative returns
+
+NomiMesi2 = ["Jan","Feb","Mar","Apr","May","JuN","JuL","Aug","Sept","Oct","Nov","Dec"]  # Abbreviated month's name
+
+st.title("OVERALL AVERAGE RETURN MONTHS:")
+#color = []
+#for i in MesiComplessivi:
+ # color.append(Color("red","green",i,0.0))
+#st.barh(NomiMesi2,MesiComplessivi,color = color)
+st.bar_chart(dict(zip(np.array(NomiMesi2), np.array(MesiComplessivi))), xlabel = "Months", ylabel = "Returns")
+#plt.axvline(0,color = "blue")
+#plt.xlabel("Rendimenti")
+#plt.ylabel("Anni")
+#plt.show()
