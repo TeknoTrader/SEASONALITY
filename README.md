@@ -1,6 +1,6 @@
 # SEASONALITY
 A study for the **stock seasonality**, in order to understand better how to have another **hedge other the markets**.
-Using this software, you can now study how an asset has been moving during specific months or seasons in a specific range of years.
+Using [this web application](https://assetseasonality.streamlit.app/), you can now study how an asset has been moving during specific months or seasons in a specific range of years.
 
 For example, you could analyze how the price of "Google" stock moved from 2005 to 2023 in the month of September, and see that September wasn't a good month to buy stocks in general.
 
