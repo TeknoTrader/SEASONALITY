@@ -152,7 +152,7 @@ def main():
       colori.append(Color("#FF0000", "#0000FF", Y, 0))
 
     # Defining a good title, to make everything more clear
-    st.write("# ",{number_emojis[i],"MONTHLY RETURNS on the month of: ", NomiMesi1[i - 1], "\n")
+    st.write("# ",number_emojis[i],"MONTHLY RETURNS on the month of: ", NomiMesi1[i - 1], "\n")
     st.write("# WIN RATE: ", round(WinRate(Mese), 2), "%\n")
     st.write("# AVERAGE RETURN: ", round(Media(Mese), 2), "%\n")
     st.write("Better excursion: ", round(max(Mese), 2), "%")
