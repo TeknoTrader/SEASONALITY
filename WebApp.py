@@ -11,8 +11,7 @@ import pandas as pd
 # Url of yahoo!finance ticker's list
 url = "https://finance.yahoo.com/lookup/"   
 
-current_year = datetime.now().year
-st.write(current_year)
+current_year = datetime.now().year # Current year
 
 # Introduction for the user
 st.write("# LET'S ANALYZE THE SEASONALITY OF AN ASSET 📊")
@@ -22,7 +21,7 @@ st.write("You can check the name of the asset 🔍 you're searching at this [lin
 
 AnnoPartenz = st.number_input("Starting year 📅: ",min_value = 1850, step = 1)
 
-AnnoFin = st.number_input("End year 📅: ", min_value = 1900, step = 1)
+AnnoFin = st.number_input("End year 📅: ", value = current_year, min_value = 1900, step = 1)
 
 # Testo un attimo l'estrazione di informazioni, quali mesi ed anni
 # print(end.month)
