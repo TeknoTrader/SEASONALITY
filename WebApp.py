@@ -51,21 +51,7 @@ def main():
   # Inizialization
   Annate1 = list(range(AnnoPartenza, AnnoFine))
   NomiMesi = list(range(1, 13))
-  number_emojis =
-  {
-    1: "\U00000031\U000020E3",  # 1️⃣
-    2: "\U00000032\U000020E3",  # 2️⃣
-    3: "\U00000033\U000020E3",  # 3️⃣
-    4: "\U00000034\U000020E3",  # 4️⃣
-    5: "\U00000035\U000020E3",  # 5️⃣
-    6: "\U00000036\U000020E3",  # 6️⃣
-    7: "\U00000037\U000020E3",  # 7️⃣
-    8: "\U00000038\U000020E3",  # 8️⃣
-    9: "\U00000039\U000020E3",  # 9️⃣
-    10: "1️⃣0️⃣",  # There is no unicode for 2 decimals numbers
-    11: "1️⃣1️⃣",
-    12: "1️⃣2️⃣"
-  }
+  number_emojis = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣","🔟", "1️⃣1️⃣", "1️⃣2️⃣"] # There is no unicode for 2 decimals numbers
 
   Annate = []  # Conversion of Annate1 's elements in string type
   for i in Annate1:
