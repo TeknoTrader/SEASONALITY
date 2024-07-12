@@ -7,7 +7,7 @@ from datetime import date
 import numpy as np
 import pandas as pd
 
-url = https://finance.yahoo.com/lookup/    # Url of yahoo!finance ticker's list
+url = "https://finance.yahoo.com/lookup/"    # Url of yahoo!finance ticker's list
 
 # Introduction for the user
 st.write("# LET'S ANALYZE THE SEASONALITY OF AN ASSET")
