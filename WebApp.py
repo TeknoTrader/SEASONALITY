@@ -156,8 +156,8 @@ def main():
     st.bar_chart(dict(zip(np.array(Annate), np.array(Mese))))  # ,color=colori) # Plot the bar chart of the results
     # st.axhline(0,color = "green")  # Horizontal line, to see better where are the positive and negative returns
 
-  NomiMesi2 = ["Jan", "Feb", "Mar", "Apr", "May", "JuN", "JuL", "Aug", "Sept", "Oct", "Nov",
-               "Dec"]  # Abbreviated month's name
+  NomiMesi2 = ["01-Jan", "02-Feb", "03-Mar", "04-Apr", "05-May", "06-JuN", "07-JuL", "08-Aug", "09-Sept", "1-Oct", "11-Nov",
+               "12-Dec"]  # Abbreviated month's name
 
   st.title("⚠️OVERALL AVERAGE RETURN MONTHS:")
   # color = []
