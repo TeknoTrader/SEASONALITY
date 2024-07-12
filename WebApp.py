@@ -11,20 +11,20 @@ import pandas as pd
 url = "https://finance.yahoo.com/lookup/"   
 
 # Introduction for the user
-st.write("# LET'S ANALYZE THE SEASONALITY OF AN ASSET")
+st.write("# LET'S ANALYZE THE SEASONALITY OF AN ASSET 📊")
 st.write("### You have just to set: when to start with the monitoration,when to end and which is the asset to see")
 st.write("Please, note that it has been used the YAHOO! FINANCE API, so you have to select the ticker of the asset based on the yahoo!finance database")
-st.write("You can check the name of the asset you're searching at this [link](%s)" % url)
+st.write("You can check the name of the asset 🔍 you're searching at this [link](%s)" % url)
 
-AnnoPartenz = st.number_input("Starting year: ",min_value = 1850, step = 1)
+AnnoPartenz = st.number_input("Starting year 📅: ",min_value = 1850, step = 1)
 
-AnnoFin = st.number_input("End year: ", min_value = 1900, step = 1)
+AnnoFin = st.number_input("End year 📅: ", min_value = 1900, step = 1)
 
 # Testo un attimo l'estrazione di informazioni, quali mesi ed anni
 # print(end.month)
 
-ticker = st.text_input("Insert the TICKER: ")
-# Preliminary download of data 'GOOG'
+ticker = st.text_input("Insert the TICKER 📈: ")
+# Preliminary download of data 'TICKER'
 def main():
   AnnoFine = int(AnnoFin)
   end = date(AnnoFine, 1, 1)
@@ -51,6 +51,20 @@ def main():
   # Inizialization
   Annate1 = list(range(AnnoPartenza, AnnoFine))
   NomiMesi = list(range(1, 13))
+  number_emojis = {
+    1: "\U0001F51F",  # keycap: 1
+    2: "\U0001F522",  # keycap: 2
+    3: "\U0001F523",  # keycap: 3
+    4: "\U0001F524",  # keycap: 4
+    5: "\U0001F525",  # keycap: 5
+    6: "\U0001F526",  # keycap: 6
+    7: "\U0001F527",  # keycap: 7
+    8: "\U0001F528",  # keycap: 8
+    9: "\U0001F529",  # keycap: 9
+    10: "\U0001F51F",  # keycap: 10
+    11: "\U0001F520",  # keycap: 11
+    12: "\U0001F521"   # keycap: 12
+}
 
   Annate = []  # Conversion of Annate1 's elements in string type
   for i in Annate1:
@@ -138,7 +152,7 @@ def main():
       colori.append(Color("#FF0000", "#0000FF", Y, 0))
 
     # Defining a good title, to make everything more clear
-    st.write("# MONTHLY RETURNS on the month of: ", NomiMesi1[i - 1], "\n")
+    st.write("# ,{number_emojis[i],MONTHLY RETURNS on the month of: ", NomiMesi1[i - 1], "\n")
     st.write("# WIN RATE: ", round(WinRate(Mese), 2), "%\n")
     st.write("# AVERAGE RETURN: ", round(Media(Mese), 2), "%\n")
     st.write("Better excursion: ", round(max(Mese), 2), "%")
