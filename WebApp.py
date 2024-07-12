@@ -156,7 +156,7 @@ def main():
   NomiMesi2 = ["Jan", "Feb", "Mar", "Apr", "May", "JuN", "JuL", "Aug", "Sept", "Oct", "Nov",
                "Dec"]  # Abbreviated month's name
 
-  st.title("OVERALL AVERAGE RETURN MONTHS:")
+  st.title("❗❗❗OVERALL AVERAGE RETURN MONTHS❗❗❗:")
   # color = []
   # for i in MesiComplessivi:
   # color.append(Color("red","green",i,0.0))
