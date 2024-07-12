@@ -13,8 +13,11 @@ url = "https://finance.yahoo.com/lookup/"    # Url of yahoo!finance ticker's lis
 st.write("# LET'S ANALYZE THE SEASONALITY OF AN ASSET")
 st.write("### You have just to set: when to start with the monitoration,when to end and which is the asset to see")
 st.write("Please, note that it has been used the YAHOO! FINANCE API, so you have to select the ticker of the asset based on the yahoo!finance database")
-st.write("You can check the name of the asset you're searching right [here](%s)", % url)
-st.markdown("You can check the name of the asset you're searching right [here](%s)", % url)
+#st.write("You can check the name of the asset you're searching right [here](%s)", % url)
+#st.markdown("You can check the name of the asset you're searching right [here](%s)", % url)
+url = "https://www.streamlit.io"
+st.write("check out this [link](%s)" % url)
+st.markdown("check out this [link](%s)" % url)
 
 AnnoPartenz = st.number_input("Starting year: ",min_value = 1850, step = 1)
 
