@@ -62,9 +62,9 @@ def main():
     7: "\U00000037\U000020E3",  # 7️⃣
     8: "\U00000038\U000020E3",  # 8️⃣
     9: "\U00000039\U000020E3",  # 9️⃣
-    10: 1️⃣0️⃣,
-    11: 1️⃣1️⃣,
-    12: 1️⃣2️⃣
+    10: "1️⃣0️⃣",  # There is no unicode for 2 decimals numbers
+    11: "1️⃣1️⃣",
+    12: "1️⃣2️⃣"
   }
 
   Annate = []  # Conversion of Annate1 's elements in string type
