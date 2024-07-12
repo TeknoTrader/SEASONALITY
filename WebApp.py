@@ -10,6 +10,9 @@ import pandas as pd
 # Url of yahoo!finance ticker's list
 url = "https://finance.yahoo.com/lookup/"   
 
+current_year = datetime.now().year
+st.write(current_year)
+
 # Introduction for the user
 st.write("# LET'S ANALYZE THE SEASONALITY OF AN ASSET 📊")
 st.write("### You have just to set: when to start with the monitoration,when to end and which is the asset to see")
