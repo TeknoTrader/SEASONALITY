@@ -51,20 +51,21 @@ def main():
   # Inizialization
   Annate1 = list(range(AnnoPartenza, AnnoFine))
   NomiMesi = list(range(1, 13))
-  number_emojis = {
-    1: "\U0001F51F",  # keycap: 1
-    2: "\U0001F522",  # keycap: 2
-    3: "\U0001F523",  # keycap: 3
-    4: "\U0001F524",  # keycap: 4
-    5: "\U0001F525",  # keycap: 5
-    6: "\U0001F526",  # keycap: 6
-    7: "\U0001F527",  # keycap: 7
-    8: "\U0001F528",  # keycap: 8
-    9: "\U0001F529",  # keycap: 9
-    10: "\U0001F51F",  # keycap: 10
-    11: "\U0001F520",  # keycap: 11
-    12: "\U0001F521"   # keycap: 12
-}
+  number_emojis =
+  {
+    1: "\U00000031\U000020E3",  # 1️⃣
+    2: "\U00000032\U000020E3",  # 2️⃣
+    3: "\U00000033\U000020E3",  # 3️⃣
+    4: "\U00000034\U000020E3",  # 4️⃣
+    5: "\U00000035\U000020E3",  # 5️⃣
+    6: "\U00000036\U000020E3",  # 6️⃣
+    7: "\U00000037\U000020E3",  # 7️⃣
+    8: "\U00000038\U000020E3",  # 8️⃣
+    9: "\U00000039\U000020E3",  # 9️⃣
+    10: 1️⃣0️⃣,
+    11: 1️⃣1️⃣,
+    12: 1️⃣2️⃣
+  }
 
   Annate = []  # Conversion of Annate1 's elements in string type
   for i in Annate1:
