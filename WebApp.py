@@ -46,7 +46,8 @@ try:
       sys.exit(1)
 except Exception as e:
     st.warning(f"⚠️ # Error with the asset {ticker}.")
-    st.write(f"# Fing here the details: {str(e)}")
+    st.write("### Probably you didn't insert the right ticker.\n### You can find here the [Yahoo finance ticker's list](url)\n")
+    st.write(f"Fing here more details: \n{str(e)}")
     sys.exit(1)
 
 asset = yf.Ticker(ticker)
