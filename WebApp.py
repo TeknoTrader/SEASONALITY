@@ -34,7 +34,7 @@ AnnoFin = st.number_input("End year 📅: ", value = current_year, min_value = 1
 
 # Testo un attimo l'estrazione di informazioni, quali mesi ed anni
 
-ticker = st.text_input("Insert the TICKER 📈: ")
+ticker = st.text_input("Insert the TICKER 📈: ", value="GOOG")
 # Verify the ticker
 try:
   asset = yf.Ticker(ticker)
@@ -51,7 +51,7 @@ except Exception as e:
 
 asset = yf.Ticker(ticker)
 info = asset.info
-info.get('longName', 'N/A')
+asset_name = info.get('longName', 'N/A')
 def main():
   AnnoFine = int(AnnoFin)
   end = date(AnnoFine, 1, 1)
@@ -188,7 +188,7 @@ def main():
       colori.append(Color("#FF0000", "#0000FF", Y, 0))
 
     # Defining a good title, to make everything more clear
-    st.write("# ",number_emojis[i-1],"MONTHLY RETURNS on the month of: ", NomiMesi1[i - 1], "\n")
+    st.write("# ",number_emojis[i-1],"MONTHLY RETURNS of", asset_name, "on the month of: ", NomiMesi1[i - 1], "\n")
     st.write("# WIN RATE: ", round(WinRate(Mese), 2), "%\n")
     st.write("# AVERAGE RETURN: ", round(Media(Mese), 2), "%\n")
 
