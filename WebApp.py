@@ -81,6 +81,7 @@ def main():
   if year >= AnnoFine:
     st.write("\n\tATTENTION!!!\nYou have to choose a data that is ABOVE ", {year})
     AnnoFine = int(input("End year: \n"))
+    sys.exit(1)
   end = date(AnnoFine, 1, 1)
   st.write("\nEnd year at: \t", end)
 
