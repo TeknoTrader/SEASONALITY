@@ -19,6 +19,8 @@ import altair as alt
 #4) Formattazione colori overall average drawdown (i colori devono essere basati sulla media oscillazioni e sulla varianza)
 # Url of yahoo!finance ticker's list
 url = "https://finance.yahoo.com/lookup/"
+NomiMesi1 = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER",
+               "NOVEMBER", "DECEMBER"]  # Defining the names of the months
 
 current_year = datetime.now().year # Current year
 
@@ -32,20 +34,26 @@ AnnoPartenz = st.number_input("Starting year 📅: ",min_value = 1850, max_value
 
 AnnoFin = st.number_input("End year 📅: ", value = current_year, min_value = 1900, max_value=current_year, step = 1)
 
-# Testo un attimo l'estrazione di informazioni, quali mesi ed anni
+# First validation check
+if AnnoFin <= AnnoPartenz:
+  st.warning(
+    "# ⚠️ ATTENTION!!!\n### The starting year (" + str(AnnoPartenz) + ") mustn't be higher than the end year (" + str(AnnoFin) + ").")
+  st.write("### Please, select another ending date for the relevation.")
+  sys.exit(1)
 
 ticker = st.text_input("Insert the TICKER 📈: ", value="GOOG")
+
 # Verify the ticker
 try:
   asset = yf.Ticker(ticker)
   info = asset.info
   info.get('longName', 'N/A')
   if info and "error" in info:
-      st.warning(f"⚠️ # The asset {ticker} doesn't exist. ⚠️")
+      st.warning(f"# ⚠️ The asset {ticker} doesn't exist. ⚠️")
       st.write("### Maybe you didn't select the right ticker.\n### You can find here the [Yahoo finance ticker's list](url)")
       sys.exit(1)
 except Exception as e:
-    st.warning(f"⚠️ # Error with the asset {ticker}.")
+    st.warning(f"# ⚠️ Error with the asset {ticker}.")
     st.write("### Probably you didn't insert the right ticker.\n### You can find here the [Yahoo finance ticker's list](url)\n")
     st.write(f"Fing here more details: \n{str(e)}")
     sys.exit(1)
@@ -64,24 +72,25 @@ def main():
       # Find the first data avaible, to avoid errors
       first_date = data.index[0]
       st.write("Data of ", ticker, " avaible from: ", first_date.date())
-
       year = int(first_date.strftime('%Y'))
     else:
-      st.warning(f"⚠️ # The asset {ticker} doesn't exist. ⚠️")
+      st.warning(f"# ⚠️ The asset {ticker} doesn't exist. ⚠️")
       st.write(
         "### Maybe you didn't select the right ticker.\n### You can find here the [Yahoo finance ticker's list](url)")
       sys.exit(1)
   except Exception as e:
     # Se non ci sono dati disponibili, fornire un messaggio personalizzato
-    st.warning(f"⚠️ # The asset {ticker} doesn't exist. ⚠️")
+    st.warning(f"# ⚠️ The asset {ticker} doesn't exist. ⚠️")
     st.write("### Maybe you didn't select the right ticker.\n### You can find here the [Yahoo finance ticker's list](url)")
     sys.exit(1)
 
-  # Another control to do
+  # Controls to do: there must be no invalid periods of time
+
+  # 1)The starting year must be superior than the first date avaible in the database
   if year >= AnnoFine:
-    st.write("\n\tATTENTION!!!\nYou have to choose a data that is ABOVE ", {year})
-    AnnoFine = int(input("End year: \n"))
+    st.warning("# ⚠️ ATTENTION!!!\n### You have to choose a data that is ABOVE ", year)
     sys.exit(1)
+
   end = date(AnnoFine, 1, 1)
   st.write("\nEnd year at: \t", end)
 
@@ -109,83 +118,48 @@ def main():
 
   array = []
 
-  # Funzione per identificare la varin punti
-  def Mensilit(mese, startY, endY):
-    array = []
-    for i in range(startY, endY):
-      if (mese != 12):  # Se è dicembre, il mese successivo è gennaio quindi si sta attenti
-        m = mese + 1
-        strt = date(i, mese, 1)
-        end = date(i, mese + 1, 1)
-        dff = yf.download(ticker, start=strt, end=end, interval="1mo")
-        dffc = pd.DataFrame(dff["Close"])
-        dffo = pd.DataFrame(dff["Open"])
-        resultAbs = dffc.iat[0, 0] - dffo.iat[0, 0]  # Nominal return
-        result = resultAbs * 100 / dffo.iat[0, 0]  # In percentage
-        array.append(result)
-      else:
-        m = mese + 1
-        strt = date(i, mese, 1)
-        end = date(i + 1, 1, 1)
-        dff = yf.download(ticker, start=strt, end=end, interval="1mo")
-        dffc = pd.DataFrame(dff["Close"])
-        dffo = pd.DataFrame(dff["Open"])
-        resultAbs = dffc.iat[0, 0] - dffo.iat[0, 0]  # Nominal return
-        result = resultAbs * 100 / dffo.iat[0, 0]  # In percentage
-        array.append(result)
-    return array
-
-  def Media(Arr):
-    tot = 0
-    for i in Arr:
-      tot += i
-    return (tot / len(Arr))
-
-  def WinRate(Arr):
-    tot = 0
-    for i in Arr:
-      if (i >= 0):
-        tot += 1
-    if (tot == 0):
-      return 0
-    else:
-      return (100 / len(Arr) * tot)
-
   # We start to create the list to keep in consideration
   WRComplessivi = []
   MesiComplessivi = []
 
-  NomiMesi1 = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER",
-               "NOVEMBER", "DECEMBER"]  # Defining the names of the months
-
-  # Select the colors of the chart
-  def Color(negclr, posclr, element, minimum):
-    if (float(element) < float(minimum)):
-      return (negclr)
-    else:
-      return (posclr)
-
-  def Color2(clr1, clr2, clr3, element, value1, value2):
-    if element <= value1:
-      return clr1
-    elif value2 <= element:
-      return clr3
-    else:
-      return clr2
-
   # ------------------------------------------------------
   # ------------------------------------------------------
   # We are going to:
-  # 1)Visualize the results of the 12 months of the year
-  # 2)Create an array that contains the data to analyze how does the varius seasons of the year performs
+  #  1)Visualize the results of the 12 months of the year
+  #  2)Create an array that contains the data to analyze how does the varius seasons of the year performs
   # ------------------------------------------------------
   # LET'S START WITH THE POINT 1!!!
   # ------------------------------------------------------
   # ------------------------------------------------------
 
-  for i in range(1, 13):
-    Mese = Mensilit(i, AnnoPartenza, AnnoFine)  # Si identifica la var di prezzo avvenuta
-    colori = []  # Colors array
+  W = 600  # Chart
+  H = 600  # Chart Height
+
+  st.write("# LET'S SEE THE RESULTS 📊")
+  Months = st.checkbox("Represent all months")
+
+  if (Months == False):
+    # Create a dictionary to store the state of each toggle
+    if 'month_toggles' not in st.session_state:
+      st.session_state.month_toggles = {month: False for month in NomiMesi1}
+
+    # Use columns to organize the toggles
+    cols = st.columns(3)  # You can adjust the number of columns as needed
+
+    # Create toggles for each month
+    for index, month in enumerate(NomiMesi1):
+      with cols[index % 3]:  # This will distribute the toggles across the columns
+        st.session_state.month_toggles[month] = st.toggle(month, st.session_state.month_toggles[month])
+
+  ChartType = st.selectbox("Representation method: ", (
+    "Complete", "Image", "Simple"),
+  )
+  rad = st.radio("Overall months rappresentation:",
+                 ["No more data",
+                  "Extended"])
+
+  def Represent(Mese, i):
+    colori = []
     for Y in Mese:
       colori.append(Color("#FF0000", "#0000FF", Y, 0))
 
@@ -200,21 +174,26 @@ def main():
     st.write("Better excursion: ", round(max(Mese), 2), "%")
     st.write("Worst excursion:  ", round(min(Mese), 2), "%")
 
-    # Arrays for later
-    MesiComplessivi.append(round(Media(Mese), 2))  # Add to the array the value for the next chart
-    WRComplessivi.append(round(WinRate(Mese), 2))  # Add to the array the value for the next chart
+    # FIRST: THE DATAFRAME
 
-    # Columns
-    col1, col2 = st.columns(2)
+    # Pandas dataframe creation
+    MeseDF = pd.DataFrame({
+      "Year 📆": Annate,
+      "Return 📈": Mese}
+    )
+    st.dataframe(MeseDF, hide_index=True)
+
+    # SECOND: THE CHART
+
     xsize = 10
     ysize = 10
-    with col2:
+    if ChartType == "Simple":
       st.bar_chart(dict(zip(np.array(Annate), np.array(Mese))))
       plt.figure(figsize=(xsize, ysize))
       plt.bar(np.array(Annate), np.array(Mese), color=np.array(colori))
       plt.axhline(0, color="green")
 
-    with col1:
+    elif ChartType == "Image":
       fig, ax = plt.subplots(figsize=(xsize, ysize))  # Aumentato ulteriormente per assicurare spazio
 
       # Disegna il grafico a barre
@@ -264,71 +243,116 @@ def main():
       # Chiudi la figura per liberare memoria
       plt.close(fig)
 
-    # Definisci gli array
-    Assex = range(2000, 2006)
-    Assey = [2, 4, -1, 7, -10, 3]
+    else:
+      avacac = 2
+      # Definisci gli array
+      Assex = Annate1
+      Assey = Mese
 
-    # Crea un DataFrame
-    df = pd.DataFrame({
-      'Anno': Assex,
-      'Valore': Assey
-    })
+      Valore_Media = Media(Mese)
 
-    # Calcola il dominio dell'asse Y basato sui dati
-    y_min = min(min(Assey), -5)
-    y_max = max(max(Assey), 4)
-    y_domain = [y_min - 1, y_max + 1]  # Aggiungiamo un po' di spazio
+      # Crea un DataFrame
+      df = pd.DataFrame({
+        'Year': Assex,
+        'Return': Assey
+      })
 
-    # Crea il grafico base con Altair
-    base = alt.Chart(df).encode(
-      x=alt.X('Anno:O', title='Anno')
-    )
+      # Calcola il dominio dell'asse Y basato sui dati
+      y_min = min(min(Assey), Valore_Media - DevStd)
+      y_max = max(max(Assey), Valore_Media + DevStd)
+      y_domain = [y_min - 1, y_max + 1]  # Aggiungiamo un po' di spazio
 
-    # Crea l'area di riempimento
-    fill_area = base.mark_area(opacity=0.2, color='gray').encode(
-      y=alt.Y('y1:Q', scale=alt.Scale(domain=y_domain), title='Valore'),
-      y2=alt.Y2('y2:Q')
-    ).transform_calculate(
-      y1='-5',
-      y2='4'
-    )
-
-    # Crea il grafico a barre
-    bars = base.mark_bar().encode(
-      y=alt.Y('Valore:Q', scale=alt.Scale(domain=y_domain)),
-      color=alt.condition(
-        alt.datum.Valore > 0,
-        alt.value('blue'),
-        alt.value('red')
+      # Crea il grafico base con Altair
+      base = alt.Chart(df).encode(
+        x=alt.X('Year:O', title='Years')
       )
-    )
 
-    # Aggiungi le linee orizzontali
-    zero_line = base.mark_rule(color='green').encode(y=alt.Y(datum=0))
-    three_line = alt.Chart(pd.DataFrame({'y': [3]})).mark_rule(
-      color='orange',
-      strokeDash=[4, 4]  # Questa opzione rende la linea tratteggiata
-    ).encode(y='y')
+      # Crea l'area di riempimento con tooltip personalizzato
+      fill_area = base.mark_area(opacity=0.2, color='gray').encode(
+        y=alt.Y('y1:Q', scale=alt.Scale(domain=y_domain), title='Return'),
+        y2=alt.Y2('y2:Q'),
+        tooltip=[
+          alt.Tooltip('y1:Q', title='Media - Standard Deviation', format='.2f'),
+          alt.Tooltip('y2:Q', title='Media + Standard Deviation', format='.2f'),
+          alt.Tooltip('average_return:Q', title='Average Return', format='.2%')
+        ]
+      ).transform_calculate(
+        y1=f"{Valore_Media - DevStd}",
+        y2=f"{Valore_Media + DevStd}",
+        average_return=f"{Valore_Media / 100}"
+      )
 
-    # Combina tutti gli elementi
-    final_chart = (fill_area + bars + zero_line + three_line).properties(
-      width=600,
-      height=400,
-      title='Grafico a Barre 2000-2005 con Area di Riempimento'
-    )
+      # Crea il grafico a barre
+      bars = base.mark_bar().encode(
+        y=alt.Y('Return:Q', scale=alt.Scale(domain=y_domain)),
+        color=alt.condition(
+          alt.datum.Return > 0,
+          alt.value('blue'),
+          alt.value('red')
+        ),
+        tooltip=[
+          alt.Tooltip('Year:O', title='Year'),
+          alt.Tooltip('return_percentage:Q', title='Return', format='.2%'),
+          alt.Tooltip('average_return:Q', title='Average Return', format='.2%')
+        ]
+      ).transform_calculate(
+        return_percentage="datum.Return/100",
+        average_return=f"{Valore_Media / 100}"
+      )
 
-    # Mostra il grafico in Streamlit
-    st.altair_chart(final_chart, use_container_width=True)
+      # Aggiungi le linee orizzontali
+      zero_line = alt.Chart(pd.DataFrame({'y': [0]})).mark_rule(color='green', size=2).encode(
+        y='y'
+      )
+      three_line = alt.Chart(pd.DataFrame({'y': [Valore_Media]})).mark_rule(
+        color='orange',
+        strokeDash=[4, 4],
+        size=2
+      ).encode(y='y')
+
+      # Combina tutti gli elementi
+      final_chart = (fill_area + bars + zero_line + three_line).properties(
+        width=W,
+        height=H,
+        title='Interactive chart'
+      )
+
+      # Crea la legenda personalizzata
+      legend_data = pd.DataFrame({
+        'color': ['gray', 'blue', 'red', 'green', 'orange'],
+        'Chart elements': ['Standard Dev.', 'Positive Return', 'Negative Return', 'Zero Line', 'Average Return']
+      })
+
+      legend = alt.Chart(legend_data).mark_rect().encode(
+        y=alt.Y('Chart elements:N', axis=alt.Axis(orient='right')),
+        color=alt.Color('color:N', scale=None)
+      ).properties(
+        width=150,
+        title='Legend'
+      )
+
+      # Combina il grafico principale con la legenda
+      combined_chart = alt.hconcat(final_chart, legend)
+
+      # Mostra il grafico in Streamlit
+      st.altair_chart(combined_chart, use_container_width=True)
 
     # End of the month's analysis
     st.divider()
 
+  for i in range(1, 13):
+    if rad == "Extended":
+      Mese = Mensilit(i, AnnoPartenza, AnnoFine)  # Si identifica la var di prezzo avvenuta
+      # Arrays for later
+      MesiComplessivi.append(round(Media(Mese), 2))  # Add to the array the value for the next chart
+      WRComplessivi.append(round(WinRate(Mese), 2))  # Add to the array the value for the next chart
+
+    if (Months == True) or (st.session_state.month_toggles[NomiMesi1[i-1]]):
+      Represent(Mensilit(i, AnnoPartenza, AnnoFine),i)
+
+
   NomiMesi2 = ["01-Jan", "02-Feb", "03-Mar", "04-Apr", "05-May", "06-JuN", "07-JuL", "08-Aug", "09-Sept", "10-Oct", "11-Nov",
                "12-Dec"]  # Abbreviated month's name
-  rad = st.radio(
-    "### Type of table:",
-    ["No more data", "Extended"]
-  )
 
   if rad == "Extended":
     st.title("⚠️OVERALL AVERAGE RETURN MONTHS:")
@@ -346,6 +370,59 @@ def main():
     plt.ylabel("Mesi")
     st.pyplot(plt.gcf())
     plt.close()
+
+# Var in punti dei mesi
+def Mensilit(mese, startY, endY):
+  array = []
+  for i in range(startY, endY):
+    if (mese != 12):  # Se è dicembre, il mese successivo è gennaio quindi si sta attenti
+      strt = date(i, mese, 1)
+      end = date(i, mese + 1, 1)
+      dff = yf.download(ticker, start=strt, end=end, interval="1mo")
+      dffc = pd.DataFrame(dff["Close"])
+      dffo = pd.DataFrame(dff["Open"])
+      resultAbs = dffc.iat[0, 0] - dffo.iat[0, 0]  # Nominal return
+      result = resultAbs * 100 / dffo.iat[0, 0]  # In percentage
+      array.append(result)
+    else:
+      strt = date(i, mese, 1)
+      end = date(i + 1, 1, 1)
+      dff = yf.download(ticker, start=strt, end=end, interval="1mo")
+      dffc = pd.DataFrame(dff["Close"])
+      dffo = pd.DataFrame(dff["Open"])
+      resultAbs = dffc.iat[0, 0] - dffo.iat[0, 0]  # Nominal return
+      result = resultAbs * 100 / dffo.iat[0, 0]  # In percentage
+      array.append(result)
+  return array
+
+def Media(Arr):
+  tot = 0
+  for i in Arr:
+    tot += i
+  return (tot / len(Arr))
+def WinRate(Arr):
+  tot = 0
+  for i in Arr:
+    if (i >= 0):
+      tot += 1
+  if (tot == 0):
+    return 0
+  else:
+    return (100 / len(Arr) * tot)
+
+# Select the colors of the chart
+def Color(negclr, posclr, element, minimum):
+  if (float(element) < float(minimum)):
+    return (negclr)
+  else:
+    return (posclr)
+def Color2(clr1, clr2, clr3, element, value1, value2):
+  if element <= value1:
+    return clr1
+  elif value2 <= element:
+    return clr3
+  else:
+    return clr2
 
 if(ticker != ""):
   main()
