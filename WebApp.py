@@ -132,8 +132,8 @@ def main():
   # ------------------------------------------------------
   # ------------------------------------------------------
 
-  W = 600  # Chart
-  H = 600  # Chart Height
+  W = 500  # Chart
+  H = 500  # Chart Height
 
   st.write("# LET'S SEE THE RESULTS 📊")
   Months = st.checkbox("Represent all months")
