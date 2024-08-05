@@ -138,27 +138,31 @@ def main():
   st.write("# LET'S SEE THE RESULTS 📊")
   Months = st.checkbox("Represent all months")
 
+  first_representation_model = "Not longer"
   if (Months == False):
-    # Create a dictionary to store the state of each toggle
-    if 'month_toggles' not in st.session_state:
-      st.session_state.month_toggles = {month: False for month in NomiMesi1}
+    if (first_representation_model == "Longer"):
+      # Create a dictionary to store the state of each toggle
+      if 'month_toggles' not in st.session_state:
+        st.session_state.month_toggles = {month: False for month in NomiMesi1}
 
-    # Use columns to organize the toggles
-    cols = st.columns(3)  # You can adjust the number of columns as needed
+      # Use columns to organize the toggles
+      cols = st.columns(3)  # You can adjust the number of columns as needed
 
-    # Create toggles for each month
-    for index, month in enumerate(NomiMesi1):
-      with cols[index % 3]:  # This will distribute the toggles across the columns
-        st.session_state.month_toggles[month] = st.toggle(month, st.session_state.month_toggles[month])
+      # Create toggles for each month
+      for index, month in enumerate(NomiMesi1):
+        with cols[index % 3]:  # This will distribute the toggles across the columns
+          st.session_state.month_toggles[month] = st.toggle(month, st.session_state.month_toggles[month])
+    else:
+      options = st.multiselect(
+        "# Select the months to consider",
+        NomiMesi1
+      )
 
-  ChartType = st.selectbox("Representation method: ", (
-    "Complete", "Image", "Simple"),
-  )
   rad = st.radio("Overall months rappresentation:",
                  ["No more data",
                   "Extended"])
 
-  def Represent(Mese, i):
+  def Represent(Mese, i, selections):
     colori = []
     for Y in Mese:
       colori.append(Color("#FF0000", "#0000FF", Y, 0))
@@ -174,26 +178,21 @@ def main():
     st.write("Better excursion: ", round(max(Mese), 2), "%")
     st.write("Worst excursion:  ", round(min(Mese), 2), "%")
 
-    # FIRST: THE DATAFRAME
+    options = ["Complete", "Image", "Simple"]
+    key = f'select_{i+1}'
+    selections[key] = st.selectbox("### Type of chart", options, key=key)
 
-    # Pandas dataframe creation
-    MeseDF = pd.DataFrame({
-      "Year 📆": Annate,
-      "Return 📈": Mese}
-    )
-    st.dataframe(MeseDF, hide_index=True)
-
-    # SECOND: THE CHART
+    # FIRST: THE CHART
 
     xsize = 10
     ysize = 10
-    if ChartType == "Simple":
+    if selections[key] == "Simple":
       st.bar_chart(dict(zip(np.array(Annate), np.array(Mese))))
       plt.figure(figsize=(xsize, ysize))
       plt.bar(np.array(Annate), np.array(Mese), color=np.array(colori))
       plt.axhline(0, color="green")
 
-    elif ChartType == "Image":
+    elif selections[key] == "Image":
       fig, ax = plt.subplots(figsize=(xsize, ysize))  # Aumentato ulteriormente per assicurare spazio
 
       # Disegna il grafico a barre
@@ -337,6 +336,15 @@ def main():
       # Mostra il grafico in Streamlit
       st.altair_chart(combined_chart, use_container_width=True)
 
+    # SECOND: THE DATAFRAME
+
+    # Pandas dataframe creation
+    MeseDF = pd.DataFrame({
+      "Year 📆": Annate,
+      "Return 📈": Mese}
+    )
+    st.dataframe(MeseDF, hide_index=True)
+
     # End of the month's analysis
     st.divider()
 
@@ -347,8 +355,9 @@ def main():
       MesiComplessivi.append(round(Media(Mese), 2))  # Add to the array the value for the next chart
       WRComplessivi.append(round(WinRate(Mese), 2))  # Add to the array the value for the next chart
 
-    if (Months == True) or (st.session_state.month_toggles[NomiMesi1[i-1]]):
-      Represent(Mensilit(i, AnnoPartenza, AnnoFine),i)
+    selections = {}
+    if (Months == True) or (NomiMesi1[i-1] in options) or (st.session_state.month_toggles[NomiMesi1[i-1]]):
+      Represent(Mensilit(i, AnnoPartenza, AnnoFine), i, selections)
 
 
   NomiMesi2 = ["01-Jan", "02-Feb", "03-Mar", "04-Apr", "05-May", "06-JuN", "07-JuL", "08-Aug", "09-Sept", "10-Oct", "11-Nov",
