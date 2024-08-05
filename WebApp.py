@@ -356,7 +356,7 @@ def main():
       WRComplessivi.append(round(WinRate(Mese), 2))  # Add to the array the value for the next chart
 
     selections = {}
-    if (Months == True) or (NomiMesi1[i-1] in options) or (st.session_state.month_toggles[NomiMesi1[i-1]]):
+    if (Months == True) or (NomiMesi1[i-1] in options): #or (st.session_state.month_toggles[NomiMesi1[i-1]]):
       Represent(Mensilit(i, AnnoPartenza, AnnoFine), i, selections)
 
 
