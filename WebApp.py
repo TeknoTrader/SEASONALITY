@@ -367,7 +367,7 @@ def main():
   
   if rad == "Extended":
     st.title("⚠️OVERALL AVERAGE RETURN MONTHS:")
-    st.bar_chart(dict(zip(np.array(NomiMesi2), np.array(MesiComplessivi))))
+    st.bar_chart(dict(zip(np.array(Months_to_consider), np.array(MesiComplessivi))))
     plt.figure(figsize=(10, 5))
     color = [Color2("red", "yellow", "blue", i, 25, 75) for i in WRComplessivi]
     plt.barh(Months_to_consider, WRComplessivi, color=color)
