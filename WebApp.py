@@ -181,9 +181,9 @@ def main():
     st.write("Better excursion: ", round(max(Mese), 2), "%")
     st.write("Worst excursion:  ", round(min(Mese), 2), "%")
 
-    options = ["Complete", "Image", "Simple"]
+    options = ["Image", "Complete", "Simple"]
     key = f'select_{i+1}'
-    selections[key] = st.selectbox("Type of database visualization", options, key=key)
+    selections[key] = st.selectbox("### Type of chart", options, key=key)
 
     # FIRST: THE CHART
 
@@ -342,7 +342,7 @@ def main():
     # SECOND: THE DATAFRAME
     options_DB = ["Graphical", "For CSV download"]
     db_key = f'db_select_{i + 1}'
-    db_selections[db_key] = st.selectbox("### Type of chart", options_DB, key=db_key)
+    db_selections[db_key] = st.selectbox("### Type of database visualization", options_DB, key=db_key)
 
     if db_selections[db_key] == "For CSV download":
       # Pandas dataframe creation
