@@ -350,10 +350,11 @@ def main():
 
   for i in range(1, 13):
     if rad == "Extended":
-      Mese = Mensilit(i, AnnoPartenza, AnnoFine)  # Si identifica la var di prezzo avvenuta
-      # Arrays for later
-      MesiComplessivi.append(round(Media(Mese), 2))  # Add to the array the value for the next chart
-      WRComplessivi.append(round(WinRate(Mese), 2))  # Add to the array the value for the next chart
+      if (Months == True) or (NomiMesi1[i-1] in options):
+        Mese = Mensilit(i, AnnoPartenza, AnnoFine)  # Si identifica la var di prezzo avvenuta
+        # Arrays for later
+        MesiComplessivi.append(round(Media(Mese), 2))  # Add to the array the value for the next chart
+        WRComplessivi.append(round(WinRate(Mese), 2))  # Add to the array the value for the next chart
 
     selections = {}
     if (Months == True) or (NomiMesi1[i-1] in options): #or (st.session_state.month_toggles[NomiMesi1[i-1]]):
