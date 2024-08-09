@@ -121,6 +121,9 @@ def main():
   # We start to create the list to keep in consideration
   WRComplessivi = []
   MesiComplessivi = []
+  Months_to_consider = []
+  NomiMesi2 = ["01-Jan", "02-Feb", "03-Mar", "04-Apr", "05-May", "06-JuN", "07-JuL", "08-Aug", "09-Sept", "10-Oct", "11-Nov",
+              "12-Dec"]  # Abbreviated month's name
 
   # ------------------------------------------------------
   # ------------------------------------------------------
@@ -355,21 +358,19 @@ def main():
         # Arrays for later
         MesiComplessivi.append(round(Media(Mese), 2))  # Add to the array the value for the next chart
         WRComplessivi.append(round(WinRate(Mese), 2))  # Add to the array the value for the next chart
+        Months_to_consider.append(NomiMesi2[i-1])
 
     selections = {}
     if (Months == True) or (NomiMesi1[i-1] in options): #or (st.session_state.month_toggles[NomiMesi1[i-1]]):
       Represent(Mensilit(i, AnnoPartenza, AnnoFine), i, selections)
 
-
-  NomiMesi2 = ["01-Jan", "02-Feb", "03-Mar", "04-Apr", "05-May", "06-JuN", "07-JuL", "08-Aug", "09-Sept", "10-Oct", "11-Nov",
-               "12-Dec"]  # Abbreviated month's name
-
+  
   if rad == "Extended":
     st.title("⚠️OVERALL AVERAGE RETURN MONTHS:")
     st.bar_chart(dict(zip(np.array(NomiMesi2), np.array(MesiComplessivi))))
     plt.figure(figsize=(10, 5))
     color = [Color2("red", "yellow", "blue", i, 25, 75) for i in WRComplessivi]
-    plt.barh(NomiMesi2, WRComplessivi, color=color)
+    plt.barh(Months_to_consider, WRComplessivi, color=color)
     plt.axvline(25, color="red")
     plt.axvline(50, color="yellow")
     plt.axvline(75, color="blue")
