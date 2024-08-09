@@ -369,12 +369,12 @@ def main():
     st.title("⚠️OVERALL AVERAGE RETURN MONTHS:")
     st.bar_chart(dict(zip(np.array(Months_to_consider), np.array(MesiComplessivi))))
     plt.figure(figsize=(10, 5))
-    color = [Color2("red", "yellow", "blue", i, 25, 75) for i in WRComplessivi]
+    color = [Color2("red", "yellow", "blue", i, 40, 60) for i in WRComplessivi]
     plt.barh(Months_to_consider, WRComplessivi, color=color)
     plt.axvline(25, color="red")
     plt.axvline(50, color="yellow")
     plt.axvline(75, color="blue")
-    plt.legend(["Profitability at 25% or below", "Profitability from 25% to 75%", "Profitability at 75% or above"],
+    plt.legend(["Profitability at 40% or below", "Profitability from 40% to 60%", "Profitability at 60% or above"],
                loc='center left', bbox_to_anchor=(1, 0.5))
     plt.title("Overall months's profits chart")
     plt.xlabel("Win rate")
