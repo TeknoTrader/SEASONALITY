@@ -165,7 +165,7 @@ def main():
                  ["No more data",
                   "Extended"])
 
-  def Represent(Mese, i, selections):
+  def Represent(Mese, i, selections, db_selections):
     colori = []
     for Y in Mese:
       colori.append(Color("#FF0000", "#0000FF", Y, 0))
@@ -340,13 +340,84 @@ def main():
       st.altair_chart(combined_chart, use_container_width=True)
 
     # SECOND: THE DATAFRAME
+    options_DB = ["Graphical", "For CSV download"]
+    db_key = f'db_select_{i + 1}'
+    db_selections[db_key] = st.selectbox("### Type of chart", options_DB, key=db_key)
 
-    # Pandas dataframe creation
-    MeseDF = pd.DataFrame({
-      "Year 📆": Annate,
-      "Return 📈": Mese}
-    )
-    st.dataframe(MeseDF, hide_index=True)
+    if db_selections[db_key] == "For CSV download":
+      # Pandas dataframe creation
+      MeseDF = pd.DataFrame({
+        "Year 📆": Annate,
+        "Return 📈": Mese}
+      )
+      st.dataframe(MeseDF, hide_index=True)
+
+    else:
+      # Pandas dataframe creation
+      table1 = pd.DataFrame({
+        "Year": Annate,
+        "Monthly return": Mese
+      })
+
+      # Tentativo di conversione della colonna "Year" in numeri
+      table1['Year'] = pd.to_numeric(table1['Year'], errors='coerce')
+
+      # Funzione per colorare le celle e aggiungere il contorno
+      def style_monthly_return(val):
+        color = 'red' if val < 0 else 'blue'
+        return f'color: {color}; text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white; font-weight: bold;'
+
+      # CSS per nascondere l'indice, impostare le larghezze delle colonne e stilizzare la tabella
+      custom_css = """
+              <style>
+              thead tr th:first-child {display:none}
+              tbody th {display:none}
+              .col0 {width: 30% !important;}
+              .col1 {width: 70% !important;}
+              .dataframe {
+                  width: 100% !important;
+                  text-align: center;
+              }
+              .dataframe td, .dataframe th {
+                  text-align: center !important;
+                  vertical-align: middle !important;
+              }
+              .monthly-return-cell {
+                  position: relative;
+                  z-index: 1;
+                  display: flex !important;
+                  justify-content: center !important;
+                  align-items: center !important;
+                  height: 100%;
+              }
+              .monthly-return-cell::before {
+                  content: "";
+                  position: absolute;
+                  top: 2px;
+                  left: 2px;
+                  right: 2px;
+                  bottom: 2px;
+                  background: rgba(255, 255, 255, 0.7);
+                  z-index: -1;
+                  border-radius: 4px;
+              }
+              </style>
+          """
+
+      # Inject CSS with Markdown
+      st.markdown(custom_css, unsafe_allow_html=True)
+
+      # Stile della tabella
+      def style_table(styler):
+        styler.format({'Year': '{:.0f}', 'Monthly return': '{:.2f}'})
+        styler.applymap(style_monthly_return, subset=['Monthly return'])
+        styler.bar(subset=['Monthly return'], align="mid", color=['#d65f5f', '#5fba7d'])
+        styler.set_properties(**{'class': 'monthly-return-cell'}, subset=['Monthly return'])
+        return styler
+
+      # Visualizza la tabella
+      st.write(table1.style.pipe(style_table).to_html(classes=['dataframe', 'col0', 'col1'], escape=False),
+               unsafe_allow_html=True)
 
     # End of the month's analysis
     st.divider()
@@ -361,8 +432,9 @@ def main():
         Months_to_consider.append(NomiMesi2[i-1])
 
     selections = {}
+    db_selections = {}
     if (Months == True) or (NomiMesi1[i-1] in options): #or (st.session_state.month_toggles[NomiMesi1[i-1]]):
-      Represent(Mensilit(i, AnnoPartenza, AnnoFine), i, selections)
+      Represent(Mensilit(i, AnnoPartenza, AnnoFine), i, selections, db_selections)
 
   
   if rad == "Extended":
