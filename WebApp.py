@@ -183,7 +183,7 @@ def main():
 
     options = ["Complete", "Image", "Simple"]
     key = f'select_{i+1}'
-    selections[key] = st.selectbox("### Type of chart", options, key=key)
+    selections[key] = st.selectbox("Type of database visualization", options, key=key)
 
     # FIRST: THE CHART
 
