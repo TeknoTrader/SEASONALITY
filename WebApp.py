@@ -203,11 +203,11 @@ def main():
       ax.axhline(0, color="green")
 
       # Aggiungi le etichette degli assi
-      ax.set_xlabel("Anni")
-      ax.set_ylabel("Rendimenti")
+      ax.set_xlabel("Years")
+      ax.set_ylabel("Returns")
 
       # Crea il patch per la deviazione standard
-      band_patch = mpatches.Patch(color='gray', alpha=0.3, label=f"± Deviazione standard ({round(DevStd, 2)}%)")
+      band_patch = mpatches.Patch(color='gray', alpha=0.3, label=f"Average ± Standard Deviation ({round(DevStd, 2)}%)")
 
       # Aggiungi la banda della deviazione standard
       ax.fill_between(
@@ -218,14 +218,14 @@ def main():
         alpha=0.3,
         hatch="X",
         edgecolor="gray",
-        label=f"± Deviazione standard ({DevStd}%)"
+        label=f"Average ± Standard Deviation ({DevStd}%)"
       )
 
       # Crea la legenda
       ax.legend(handles=[
-        plt.Line2D([0], [0], color="red", lw=4, label="Mesi negativi"),
-        plt.Line2D([0], [0], color="blue", lw=4, label="Mesi positivi"),
-        plt.Line2D([0], [0], color="red", linestyle='--', lw=2, label="Media dei rendimenti"),
+        plt.Line2D([0], [0], color="red", lw=4, label="Negative Months"),
+        plt.Line2D([0], [0], color="blue", lw=4, label="Positive Months"),
+        plt.Line2D([0], [0], color="red", linestyle='--', lw=2, label="Average returns"),
         band_patch],
         loc='upper right'  # Posiziona la legenda nell'angolo in alto a destra
       )
@@ -374,9 +374,9 @@ def main():
     plt.axvline(75, color="blue")
     plt.legend(["Profitability at 25% or below", "Profitability from 25% to 75%", "Profitability at 75% or above"],
                loc='center left', bbox_to_anchor=(1, 0.5))
-    plt.title("Grafico dei mesi più profittevoli")
+    plt.title("Overall months's profits chart")
     plt.xlabel("Win rate")
-    plt.ylabel("Mesi")
+    plt.ylabel("Months")
     st.pyplot(plt.gcf())
     plt.close()
 
