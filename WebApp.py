@@ -134,18 +134,18 @@ def main():
             first_date = data.index[0]
             Text("Data of ", ticker, " avaible from: ", first_date.date())
             year = int(first_date.strftime('%Y'))
-        else:
-            st.warning(f"# ⚠️ The asset {ticker} doesn't exist. ⚠️")
-            Text2(
-                "Maybe you didn't select the right ticker.\n### You can find here the [Yahoo finance ticker's list](url)")
-            sys.exit(1)
-    #except Exception as e:
-    #    # Se non ci sono dati disponibili, fornire un messaggio personalizzato
-    #    st.warning(f"# ⚠️ The asset {ticker} doesn't exist. ⚠️")
-    #    Text2(
-    #        "Maybe you didn't select the right ticker.")
-    #    Text2("You can find here the [Yahoo finance ticker's list](url)")
-    #    sys.exit(1)
+   #     else:
+   #         st.warning(f"# ⚠️ The asset {ticker} doesn't exist. ⚠️")
+   #         Text2(
+    #            "Maybe you didn't select the right ticker.\n### You can find here the [Yahoo finance ticker's list](url)")
+    #        sys.exit(1)
+    except Exception as e:
+        # Se non ci sono dati disponibili, fornire un messaggio personalizzato
+        st.warning(f"# ⚠️ The asset {ticker} doesn't exist. ⚠️")
+        Text2(
+            "Maybe you didn't select the right ticker.")
+        Text2("You can find here the [Yahoo finance ticker's list](url)")
+        sys.exit(1)
 
     # Controls to do: there must be no invalid periods of time
 
