@@ -11,7 +11,7 @@ import math
 import matplotlib.patches as mpatches
 import altair as alt
 
-# Maybe in a future update I will look at the colors, too
+# Markdown for Background
 st.markdown("""
 <style>
 .stApp {
@@ -20,9 +20,19 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+# Markdown for Number Input
 st.markdown("""
 <style>
 .stNumberInput label {
+    color: white;
+}
+</style>
+""", unsafe_allow_html=True)
+
+# Markdown for Text Input
+st.markdown("""
+<style>
+.stTextInput label {
     color: white;
 }
 </style>
@@ -110,7 +120,7 @@ asset_name = info.get('longName', 'N/A')
 def main():
     AnnoFine = int(AnnoFin)
     end = date(AnnoFine, 1, 1)
-    st.write("\nEnd of the relevation: \t", end)
+    Text("\nEnd of the relevation: \t", end)
     year = 0
     try:
         data = yf.download(ticker)
