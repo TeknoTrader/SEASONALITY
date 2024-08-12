@@ -59,7 +59,14 @@ st.write("You can check the name of the asset 🔍 you're searching at this [lin
 AnnoPartenz = st.number_input("Starting year 📅: ", min_value=1850, max_value=current_year - 1, step=1)
 
 Text_White("End year 📅: ")
-AnnoFin = st.number_input("<p style='color: #fff;'>" + "End year 📅: " + "</p>", value=current_year, min_value=1900, max_value=current_year, step=1)
+st.markdown("""
+<style>
+.stNumberInput input {
+    color: white;
+}
+</style>
+""", unsafe_allow_html=True)
+AnnoFin = st.number_input("End year 📅: ", value=current_year, min_value=1900, max_value=current_year, step=1)
 
 # First validation check
 if AnnoFin <= AnnoPartenz:
