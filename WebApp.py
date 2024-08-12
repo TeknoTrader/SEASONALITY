@@ -19,7 +19,7 @@ st.markdown("""
 }
 
 #my-text {
-    color: #ffffff;
+    color: #ffffff !important;
 }
 </style>
 """, unsafe_allow_html=True)
