@@ -180,7 +180,7 @@ def main():
     st.write("Better excursion:", round(max(Mese), 2), "%")
     st.write("Worst excursion:", round(min(Mese), 2), "%")
 
-    options = ["Image", "Complete", "Simple"]
+    options = ["Image", "Interactive"]
     key = f'select_{i+1}'
     selections[key] = st.selectbox("### Type of chart", options, key=key)
 
@@ -188,13 +188,8 @@ def main():
 
     xsize = 10
     ysize = 10
-    if selections[key] == "Simple":
-      st.bar_chart(dict(zip(np.array(Annate), np.array(Mese))))
-      plt.figure(figsize=(xsize, ysize))
-      plt.bar(np.array(Annate), np.array(Mese), color=np.array(colori))
-      plt.axhline(0, color="green")
 
-    elif selections[key] == "Image":
+    if selections[key] == "Image":
       fig, ax = plt.subplots(figsize=(xsize, ysize))  # Aumentato ulteriormente per assicurare spazio
 
       # Disegna il grafico a barre
@@ -227,7 +222,7 @@ def main():
       ax.legend(handles=[
         plt.Line2D([0], [0], color="red", lw=4, label="Negative Months"),
         plt.Line2D([0], [0], color="blue", lw=4, label="Positive Months"),
-        plt.Line2D([0], [0], color="red", linestyle='--', lw=2, label="Average returns"),
+        plt.Line2D([0], [0], color="red", linestyle='--', lw=2, label=str("Average returns (" + str(Valore_Media) + ")"),
         band_patch],
         loc='upper right'  # Posiziona la legenda nell'angolo in alto a destra
       )
@@ -244,7 +239,7 @@ def main():
       # Chiudi la figura per liberare memoria
       plt.close(fig)
 
-    else:
+    else:  # if the chart is "Interactive"
       avacac = 2
       # Definisci gli array
       Assex = Annate1
