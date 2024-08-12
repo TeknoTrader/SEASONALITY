@@ -12,11 +12,10 @@ import matplotlib.patches as mpatches
 import altair as alt
 
 # MANCA SOLO:
-#0) Formattazione di Altair
-#1) Scelta tra visualizzazione (immagine, altair o dataframe [scaricabile o solo visualizzazione bellina e color?])
-#2) Error handling SP500: deve identificare qual è la prima "data non corrotta" e dire all'utente che cosa cazzo sta succedendo
-#3) Codice IN INGLESE!!!
-#4) Formattazione colori overall average drawdown (i colori devono essere basati sulla media oscillazioni e sulla varianza)
+#1) Error handling SP500: deve identificare qual è la prima "data non corrotta" e dire all'utente che cosa sta succedendo
+#2) Codice IN INGLESE!!!
+#3) Formattazione colori overall average drawdown (i colori devono essere basati sulla media oscillazioni e sulla varianza)
+
 # Url of yahoo!finance ticker's list
 url = "https://finance.yahoo.com/lookup/"
 NomiMesi1 = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER",
@@ -138,7 +137,7 @@ def main():
   W = 600  # Chart
   H = 600  # Chart Height
 
-  st.write("# LET'S SEE THE RESULTS 📊")
+  st.write("# LET'S SEE THE RESULTS 📈")
   Months = st.checkbox("Represent all months")
 
   first_representation_model = "Not longer"
@@ -172,14 +171,14 @@ def main():
 
     # Defining a good title, to make everything more clear
     st.write("# ",number_emojis[i-1],"MONTHLY RETURNS of", asset_name, "on the month of: ", NomiMesi1[i - 1], "\n")
-    st.write("# WIN RATE: ", round(WinRate(Mese), 2), "%\n")
-    st.write("# AVERAGE RETURN: ", round(Media(Mese), 2), "%\n")
+    st.write("# WIN RATE:", round(WinRate(Mese), 2), "%\n")
+    st.write("# AVERAGE RETURN:", round(Media(Mese), 2), "%\n")
 
     DevStd = math.sqrt(sum((x - Media(Mese)) ** 2 for x in Mese) / len(Mese))
-    st.write("### Standard deviation:  ", round(DevStd,2), "%")
+    st.write("### Standard deviation:", round(DevStd,2), "%")
 
-    st.write("Better excursion: ", round(max(Mese), 2), "%")
-    st.write("Worst excursion:  ", round(min(Mese), 2), "%")
+    st.write("Better excursion:", round(max(Mese), 2), "%")
+    st.write("Worst excursion:", round(min(Mese), 2), "%")
 
     options = ["Image", "Complete", "Simple"]
     key = f'select_{i+1}'
