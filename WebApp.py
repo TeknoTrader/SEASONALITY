@@ -121,7 +121,7 @@ def main():
     AnnoFine = int(AnnoFin)
     end = date(AnnoFine, 1, 1)
     st.write()
-    Text(f"End of the relevation: {end}")
+    Text(f"End of the relevation: {date(AnnoFine, 1, 1)}")
     year = 0
     try:
         data = yf.download(ticker)
