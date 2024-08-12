@@ -89,7 +89,14 @@ def main_page():
     Text2("You have just to set: when to start with the monitoration,when to end and which is the asset to see")
     Text(
         "Please, note that it has been used the YAHOO! FINANCE API, so you have to select the ticker of the asset based on the yahoo!finance database")
-    st.markdown("You can check the name of the asset 🔍 you're searching at this [link]({})".format(url))
+    st.markdown(f"""
+    <style>
+    .colored-text {{
+      color: {text_color};
+    }}
+    </style>
+    <p class="colored-text">You can check the name of the asset  you're searching at this <a href="{url}">link</a>.</p>
+    """, unsafe_allow_html=True)
 
     AnnoPartenz = st.number_input("Starting year 📅: ", min_value=1850, max_value=current_year - 1, step=1)
 
