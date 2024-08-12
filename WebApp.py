@@ -171,11 +171,11 @@ def main():
 
     # Defining a good title, to make everything more clear
     st.write("# ",number_emojis[i-1],"MONTHLY RETURNS of", asset_name, "on the month of: ", NomiMesi1[i - 1], "\n")
-    st.write("# WIN RATE:", str(round(WinRate(Mese), 2)), "%\n")
-    st.write("# AVERAGE RETURN:", str(round(Media(Mese), 2)), "%\n")
+    st.write("# WIN RATE:", str(round(WinRate(Mese), 2)) + "%\n")
+    st.write("# AVERAGE RETURN:", str(round(Media(Mese), 2)) + "%\n")
 
     DevStd = math.sqrt(sum((x - Media(Mese)) ** 2 for x in Mese) / len(Mese))
-    st.write("### Standard deviation\t:", str(round(DevStd,2)), "%")
+    st.write("### Standard deviation\t:", str(round(DevStd,2)) + "%")
 
     st.write("Better excursion:", round(max(Mese), 2), "%")
     st.write("Worst excursion:", round(min(Mese), 2), "%")
