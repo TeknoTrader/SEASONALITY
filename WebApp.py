@@ -12,8 +12,8 @@ import matplotlib.patches as mpatches
 import altair as alt
 
 with st.sidebar:
-    background_input = st.text_input("Background color:", value=#000000)
-    text_input = st.text_input("Inserisci il tuo testo", value = #fff)
+    background_input = st.text_input("Background color:", value= "#000000")
+    text_input = st.text_input("Inserisci il tuo testo", value = "#fff")
     
 # Markdown for Background
 st.markdown(f"""
