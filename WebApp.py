@@ -19,7 +19,7 @@ with st.sidebar:
 st.markdown(f"""
 <style>
 .stApp {{
-    background-color: {color_input};
+    background-color: {background_input};
 }}
 </style>
 """, unsafe_allow_html=True)
@@ -28,7 +28,7 @@ st.markdown(f"""
 st.markdown(f"""
 <style>
 .stNumberInput label {{
-    color: {text_color};
+    color: {text_input};
 }}
 </style>
 """, unsafe_allow_html=True)
@@ -37,7 +37,7 @@ st.markdown(f"""
 st.markdown(f"""
 <style>
 .stTextInput label {{
-    color: {text_color};
+    color: {text_input};
 }}
 </style>
 """, unsafe_allow_html=True)
