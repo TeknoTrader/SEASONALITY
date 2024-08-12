@@ -127,11 +127,10 @@ def main():
     st.write()
     Text(f"End of the relevation: {date(AnnoFine, 1, 1)}")
     year = 0
-    def serio():
-        try:
+    try:
         data = yf.download(ticker)
         if not data.empty:
-            # Find the first data avaible, to avoid errors
+        # Find the first data avaible, to avoid errors
             first_date = data.index[0]
             Text("Data of ", ticker, " avaible from: ", first_date.date())
             year = int(first_date.strftime('%Y'))
@@ -145,8 +144,6 @@ def main():
         Text2("Maybe you didn't select the right ticker.")
         Text2("You can find here the [Yahoo finance ticker's list](url)")
         sys.exit(1)
-
-    data = yf.download(ticker)
 
     # Controls to do: there must be no invalid periods of time
 
