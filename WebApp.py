@@ -12,17 +12,16 @@ import matplotlib.patches as mpatches
 import altair as alt
 
 # Maybe in a future update I will look at the colors, too
-#st.markdown("""
-#<style>
-#.stApp {
-#    background-color: #e4e8ff;
-#}
-#</style>
-#""", unsafe_allow_html=True)
+st.markdown("""
+<style>
+.stApp {
+    background-color: #000000;
+}
+</style>
+""", unsafe_allow_html=True)
 
-#def Text_Black(text):
-#    st.write("<p style='color: #000000;'>" + text + "</p>", unsafe_allow_html=True)
-#Text_Black("# Questo testo dovrebbe essere bianco")
+def Text_White(text):
+    st.write("<p style='color: #fff;'>" + text + "</p>", unsafe_allow_html=True)
 
 # Some information about me
 st.sidebar.write("# Who built this web application?")
@@ -59,7 +58,8 @@ st.write("You can check the name of the asset 🔍 you're searching at this [lin
 
 AnnoPartenz = st.number_input("Starting year 📅: ", min_value=1850, max_value=current_year - 1, step=1)
 
-AnnoFin = st.number_input("End year 📅: ", value=current_year, min_value=1900, max_value=current_year, step=1)
+Text_White("End year 📅: ")
+AnnoFin = st.number_input(value=current_year, min_value=1900, max_value=current_year, step=1)
 
 # First validation check
 if AnnoFin <= AnnoPartenz:
