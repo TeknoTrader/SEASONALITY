@@ -37,9 +37,6 @@ st.sidebar.write("◾ [MT4 free softwares](https://www.mql5.com/it/users/teknotr
 st.sidebar.write("\n### Are you interested in the source code? 🧾")
 st.sidebar.write("Visit the [GitHub repository](https://github.com/TeknoTrader/OrganizationTools)")
 
-st.title("La mia app con sfondo scuro e testo bianco")
-st.write(f"<p id='my-text'>Questo testo dovrebbe essere bianco: {st.session_state.my_variable}</p>", unsafe_allow_html=True)
-
 # MANCA SOLO:
 # 1) Error handling SP500: deve identificare qual è la prima "data non corrotta" e dire all'utente che cosa sta succedendo
 # 2) Codice IN INGLESE!!!
