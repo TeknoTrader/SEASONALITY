@@ -120,7 +120,7 @@ asset_name = info.get('longName', 'N/A')
 def main():
     AnnoFine = int(AnnoFin)
     end = date(AnnoFine, 1, 1)
-    Text("\nEnd of the relevation: \t", end)
+    Text("\nEnd of the relevation: ", end)
     year = 0
     try:
         data = yf.download(ticker)
