@@ -20,8 +20,22 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-def Text_White(text):
+st.markdown("""
+<style>
+.stNumberInput label {
+    color: white;
+}
+</style>
+""", unsafe_allow_html=True)
+
+def Text(text):
     st.write("<p style='color: #fff;'>" + text + "</p>", unsafe_allow_html=True)
+def Text2(text):
+    st.subheader("<p style='color: #fff;'>" + text + "</p>", unsafe_allow_html=True)
+def Text3(text):
+    st.title("<p style='color: #fff;'>" + text + "</p>", unsafe_allow_html=True)
+def Warning(text):
+    st.warning("<p style='color: #fff;'>" + text + "</p>", unsafe_allow_html=True)
 
 # Some information about me
 st.sidebar.write("# Who built this web application?")
@@ -50,22 +64,16 @@ NomiMesi1 = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AU
 current_year = datetime.now().year  # Current year
 
 # Introduction for the user
-st.write("# LET'S ANALYZE THE SEASONALITY OF AN ASSET 📊")
-st.write("### You have just to set: when to start with the monitoration,when to end and which is the asset to see")
-st.write(
+#st.write("# LET'S ANALYZE THE SEASONALITY OF AN ASSET 📊")
+Text3("LET'S ANALYZE THE SEASONALITY OF AN ASSET 📊"
+#st.write("### You have just to set: when to start with the monitoration,when to end and which is the asset to see")
+Text2("You have just to set: when to start with the monitoration,when to end and which is the asset to see")
+      st.write(
     "Please, note that it has been used the YAHOO! FINANCE API, so you have to select the ticker of the asset based on the yahoo!finance database")
 st.write("You can check the name of the asset 🔍 you're searching at this [link](%s)" % url)
 
 AnnoPartenz = st.number_input("Starting year 📅: ", min_value=1850, max_value=current_year - 1, step=1)
 
-Text_White("End year 📅: ")
-st.markdown("""
-<style>
-.stNumberInput label {
-    color: white;
-}
-</style>
-""", unsafe_allow_html=True)
 AnnoFin = st.number_input("End year 📅: ", value=current_year, min_value=1900, max_value=current_year, step=1)
 
 # First validation check
