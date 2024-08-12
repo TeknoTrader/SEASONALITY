@@ -13,7 +13,7 @@ import altair as alt
 
 with st.sidebar:
     background_input = st.color_picker("Background color:", value= "#000000")
-    text_input = st.color_picker("Inserisci il tuo testo", value = "#fff")
+    text_input = st.color_picker("Text color", value = "#fff")
     
 # Markdown for Background
 st.markdown(f"""
@@ -132,7 +132,7 @@ def main():
         if not data.empty:
             # Find the first data avaible, to avoid errors
             first_date = data.index[0]
-            st.write("Data of ", ticker, " avaible from: ", first_date.date())
+            Text("Data of ", ticker, " avaible from: ", first_date.date())
             year = int(first_date.strftime('%Y'))
         else:
             st.warning(f"# ⚠️ The asset {ticker} doesn't exist. ⚠️")
@@ -155,7 +155,7 @@ def main():
         sys.exit(1)
 
     end = date(AnnoFine, 1, 1)
-    Text("\nEnd year at: {end}")
+    Text(f"\nEnd year at: {end}")
 
     if year < AnnoPartenz:
         AnnoPartenza = AnnoPartenz
@@ -174,7 +174,7 @@ def main():
 
     inizio = date(AnnoPartenza, 1, 1)
     # Now we download the serious data
-    st.write("\nStarting calculations from: {inizio}")
+    Text(f"\nStarting calculations from: {inizio}")
 
     df = yf.download(ticker, start=inizio, end=end, interval="1mo")
 
@@ -236,16 +236,15 @@ def main():
             colori.append(Color("#FF0000", "#0000FF", Y, 0))
 
         # Defining a good title, to make everything more clear
-        st.write("# ", number_emojis[i - 1], "MONTHLY RETURNS of", asset_name, "on the month of: ", NomiMesi1[i - 1],
-                 "\n")
-        st.write("# WIN RATE:", str(round(WinRate(Mese), 2)) + "%\n")
-        st.write("# AVERAGE RETURN:", str(round(Media(Mese), 2)) + "%\n")
+        Text3("f {number_emojis[i - 1]} MONTHLY RETURNS of {asset_name} on the month of: {NomiMesi1[i - 1]}\n")
+        Text3(f"WIN RATE: {round(WinRate(Mese), 2)} %\n")
+        Text3(f"AVERAGE RETURN: {str(round(Media(Mese), 2))} %\n")
 
         DevStd = math.sqrt(sum((x - Media(Mese)) ** 2 for x in Mese) / len(Mese))
-        st.write("### Standard deviation\t:", str(round(DevStd, 2)) + "%")
+        Text2(f"Standard deviation: {str(round(DevStd, 2))} %")
 
-        st.write("Better excursion:", round(max(Mese), 2), "%")
-        st.write("Worst excursion:", round(min(Mese), 2), "%")
+        Text(f"Better excursion: {round(max(Mese), 2)} %")
+        Text(f"Worst excursion: {round(min(Mese), 2)} %")
 
         options = ["Image", "Interactive"]
         key = f'select_{i + 1}'
