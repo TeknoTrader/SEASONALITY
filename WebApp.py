@@ -11,17 +11,18 @@ import math
 import matplotlib.patches as mpatches
 import altair as alt
 
-st.markdown("""
-<style>
-.stApp {
-    background-color: #e4e8ff;
-}
-</style>
-""", unsafe_allow_html=True)
+# Maybe in a future update I will look at the colors, too
+#st.markdown("""
+#<style>
+#.stApp {
+#    background-color: #e4e8ff;
+#}
+#</style>
+#""", unsafe_allow_html=True)
 
-def Text_Black(text):
-    st.write("<p style='color: #000000;'>" + text + "</p>", unsafe_allow_html=True)
-Text_Black("# Questo testo dovrebbe essere bianco")
+#def Text_Black(text):
+#    st.write("<p style='color: #000000;'>" + text + "</p>", unsafe_allow_html=True)
+#Text_Black("# Questo testo dovrebbe essere bianco")
 
 # Some information about me
 st.sidebar.write("# Who built this web application?")
