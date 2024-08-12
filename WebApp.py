@@ -23,6 +23,8 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+st.write(":white[test for the color]")
+
 # Some information about me
 st.sidebar.write("# Who built this web application?")
 st.sidebar.write("My name is Nicola Chimenti.\nI'm currently pursuing a degree in \"Digital Economics\" and I love finance, programming and Data Science")
