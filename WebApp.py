@@ -177,8 +177,8 @@ def main():
     DevStd = math.sqrt(sum((x - Media(Mese)) ** 2 for x in Mese) / len(Mese))
     st.write("### Standard deviation\t:", str(round(DevStd,2)) + "%")
 
-    st.write("Better excursion:", **str(round(max(Mese), 2))**, "%")
-    st.write("Worst excursion:", **str(round(min(Mese), 2))**, "%")
+    st.write("Better excursion:", round(max(Mese), 2), "%")
+    st.write("Worst excursion:", round(min(Mese), 2), "%")
 
     options = ["Image", "Interactive"]
     key = f'select_{i+1}'
