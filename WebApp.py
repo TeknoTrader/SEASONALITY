@@ -65,12 +65,12 @@ current_year = datetime.now().year  # Current year
 
 # Introduction for the user
 #st.write("# LET'S ANALYZE THE SEASONALITY OF AN ASSET 📊")
-Text3("LET'S ANALYZE THE SEASONALITY OF AN ASSET 📊"
+Text3("LET'S ANALYZE THE SEASONALITY OF AN ASSET 📊")
 #st.write("### You have just to set: when to start with the monitoration,when to end and which is the asset to see")
 Text2("You have just to set: when to start with the monitoration,when to end and which is the asset to see")
       st.write(
     "Please, note that it has been used the YAHOO! FINANCE API, so you have to select the ticker of the asset based on the yahoo!finance database")
-st.write("You can check the name of the asset 🔍 you're searching at this [link](%s)" % url)
+Text("You can check the name of the asset 🔍 you're searching at this [link](%s)" % url)
 
 AnnoPartenz = st.number_input("Starting year 📅: ", min_value=1850, max_value=current_year - 1, step=1)
 
@@ -100,7 +100,7 @@ except Exception as e:
     st.warning(f"# ⚠️ Error with the asset {ticker}.")
     st.write(
         "### Probably you didn't insert the right ticker.\n### You can find here the [Yahoo finance ticker's list](url)\n")
-    st.write(f"Fing here more details: \n{str(e)}")
+    Text(f"Fing here more details: \n{str(e)}")
     sys.exit(1)
 
 asset = yf.Ticker(ticker)
@@ -122,14 +122,15 @@ def main():
             year = int(first_date.strftime('%Y'))
         else:
             st.warning(f"# ⚠️ The asset {ticker} doesn't exist. ⚠️")
-            st.write(
-                "### Maybe you didn't select the right ticker.\n### You can find here the [Yahoo finance ticker's list](url)")
+            Text2(
+                "Maybe you didn't select the right ticker.\n### You can find here the [Yahoo finance ticker's list](url)")
             sys.exit(1)
     except Exception as e:
         # Se non ci sono dati disponibili, fornire un messaggio personalizzato
         st.warning(f"# ⚠️ The asset {ticker} doesn't exist. ⚠️")
-        st.write(
-            "### Maybe you didn't select the right ticker.\n### You can find here the [Yahoo finance ticker's list](url)")
+        Text2(
+            "Maybe you didn't select the right ticker.")
+        Text2("You can find here the [Yahoo finance ticker's list](url)")
         sys.exit(1)
 
     # Controls to do: there must be no invalid periods of time
@@ -140,7 +141,7 @@ def main():
         sys.exit(1)
 
     end = date(AnnoFine, 1, 1)
-    st.write("\nEnd year at: \t", end)
+    Text("\nEnd year at: \t", end)
 
     if year < AnnoPartenz:
         AnnoPartenza = AnnoPartenz
