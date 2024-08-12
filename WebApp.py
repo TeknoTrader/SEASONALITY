@@ -11,15 +11,15 @@ import math
 import matplotlib.patches as mpatches
 import altair as alt
 
-# Backgound & text color
+# Background and color
 st.markdown("""
 <style>
 .stApp {
-    background-color: #000; /* Sfondo nero */
+    background-color: #121212; /* Grigio scuro, quasi nero */
 }
 
 .stText {
-    color: #fff; /* Testo bianco */
+    color: #ffffff; /* Bianco puro */
 }
 </style>
 """, unsafe_allow_html=True)
