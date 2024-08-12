@@ -151,7 +151,7 @@ def main():
         sys.exit(1)
 
     end = date(AnnoFine, 1, 1)
-    Text("\nEnd year at: \t", end)
+    Text("\nEnd year at: {end}")
 
     if year < AnnoPartenz:
         AnnoPartenza = AnnoPartenz
@@ -170,7 +170,7 @@ def main():
 
     inizio = date(AnnoPartenza, 1, 1)
     # Now we download the serious data
-    st.write("\nStarting calculations from: \t", inizio)
+    st.write("\nStarting calculations from: {inizio}")
 
     df = yf.download(ticker, start=inizio, end=end, interval="1mo")
 
@@ -199,7 +199,7 @@ def main():
     W = 600  # Chart
     H = 600  # Chart Height
 
-    st.write("# LET'S SEE THE RESULTS 📈")
+    Text3("LET'S SEE THE RESULTS 📈")
     Months = st.checkbox("Represent all months")
 
     first_representation_model = "Not longer"
