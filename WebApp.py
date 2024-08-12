@@ -15,11 +15,11 @@ import altair as alt
 st.markdown("""
 <style>
 .stApp {
-    background-color: #121212; /* Grigio scuro, quasi nero */
+    background-color: #121212;
 }
 
-.stText {
-    color: #ffffff; /* Bianco puro */
+#my-text {
+    color: #ffffff;
 }
 </style>
 """, unsafe_allow_html=True)
