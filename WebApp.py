@@ -11,30 +11,35 @@ import math
 import matplotlib.patches as mpatches
 import altair as alt
 
+with st.sidebar:
+    background_input = st.text_input("Background color:", value=#000000)
+with st.sidebar:
+    text_input = st.text_input("Inserisci il tuo testo", value = #fff)
+    
 # Markdown for Background
-st.markdown("""
+st.markdown(f"""
 <style>
-.stApp {
-    background-color: #000000;
-}
+.stApp {{
+    background-color: {color_input};
+}}
 </style>
 """, unsafe_allow_html=True)
 
 # Markdown for Number Input
-st.markdown("""
+st.markdown(f"""
 <style>
-.stNumberInput label {
-    color: white;
-}
+.stNumberInput label {{
+    color: {text_color};
+}}
 </style>
 """, unsafe_allow_html=True)
 
 # Markdown for Text Input
-st.markdown("""
+st.markdown(f"""
 <style>
-.stTextInput label {
-    color: white;
-}
+.stTextInput label {{
+    color: {text_color};
+}}
 </style>
 """, unsafe_allow_html=True)
 
