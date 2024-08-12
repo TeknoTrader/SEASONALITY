@@ -11,15 +11,6 @@ import math
 import matplotlib.patches as mpatches
 import altair as alt
 
-# Background and color
-st.markdown("""
-<style>
-.stApp {
-    background-color: #000000;
-}
-</style>
-""", unsafe_allow_html=True)
-
 # Some information about me
 st.sidebar.write("# Who built this web application?")
 st.sidebar.write("My name is Nicola Chimenti.\nI'm currently pursuing a degree in \"Digital Economics\" and I love finance, programming and Data Science")
@@ -47,7 +38,7 @@ NomiMesi1 = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AU
 current_year = datetime.now().year  # Current year
 
 # Introduction for the user
-st.write("# :white[LET'S ANALYZE THE SEASONALITY OF AN ASSET]📊")
+st.write("# LET'S ANALYZE THE SEASONALITY OF AN ASSET 📊")
 st.write("### You have just to set: when to start with the monitoration,when to end and which is the asset to see")
 st.write(
     "Please, note that it has been used the YAHOO! FINANCE API, so you have to select the ticker of the asset based on the yahoo!finance database")
