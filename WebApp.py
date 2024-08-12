@@ -471,6 +471,52 @@ def Mensilit(mese, startY, endY):
       array.append(result)
   return array
 
+def High(mese, startY, endY):
+  array = []
+  for i in range(startY, endY):
+    if (mese != 12):  # Se è dicembre, il mese successivo è gennaio quindi si sta attenti
+      strt = date(i, mese, 1)
+      end = date(i, mese + 1, 1)
+      dff = yf.download(ticker, start=strt, end=end, interval="1mo")
+      dffc = pd.DataFrame(dff["High"])
+      dffo = pd.DataFrame(dff["Open"])
+      resultAbs = dffc.iat[0, 0] - dffo.iat[0, 0]  # Nominal return
+      result = resultAbs * 100 / dffo.iat[0, 0]  # In percentage
+      array.append(result)
+    else:
+      strt = date(i, mese, 1)
+      end = date(i + 1, 1, 1)
+      dff = yf.download(ticker, start=strt, end=end, interval="1mo")
+      dffc = pd.DataFrame(dff["High"])
+      dffo = pd.DataFrame(dff["Open"])
+      resultAbs = dffc.iat[0, 0] - dffo.iat[0, 0]  # Nominal return
+      result = resultAbs * 100 / dffo.iat[0, 0]  # In percentage
+      array.append(result)
+  return array
+
+def Low(mese, startY, endY):
+  array = []
+  for i in range(startY, endY):
+    if (mese != 12):  # Se è dicembre, il mese successivo è gennaio quindi si sta attenti
+      strt = date(i, mese, 1)
+      end = date(i, mese + 1, 1)
+      dff = yf.download(ticker, start=strt, end=end, interval="1mo")
+      dffc = pd.DataFrame(dff["Low"])
+      dffo = pd.DataFrame(dff["Open"])
+      resultAbs = dffc.iat[0, 0] - dffo.iat[0, 0]  # Nominal return
+      result = resultAbs * 100 / dffo.iat[0, 0]  # In percentage
+      array.append(result)
+    else:
+      strt = date(i, mese, 1)
+      end = date(i + 1, 1, 1)
+      dff = yf.download(ticker, start=strt, end=end, interval="1mo")
+      dffc = pd.DataFrame(dff["Low"])
+      dffo = pd.DataFrame(dff["Open"])
+      resultAbs = dffc.iat[0, 0] - dffo.iat[0, 0]  # Nominal return
+      result = resultAbs * 100 / dffo.iat[0, 0]  # In percentage
+      array.append(result)
+  return array
+
 def Media(Arr):
   tot = 0
   for i in Arr:
