@@ -15,11 +15,7 @@ import altair as alt
 st.markdown("""
 <style>
 .stApp {
-    background-color: #808080;
-}
-
-#my-text {
-    color:  #FFFF8F !important;
+    background-color: #000000;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -51,7 +47,7 @@ NomiMesi1 = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AU
 current_year = datetime.now().year  # Current year
 
 # Introduction for the user
-st.write("# LET'S ANALYZE THE SEASONALITY OF AN ASSET 📊")
+st.write("# :white[LET'S ANALYZE THE SEASONALITY OF AN ASSET]📊")
 st.write("### You have just to set: when to start with the monitoration,when to end and which is the asset to see")
 st.write(
     "Please, note that it has been used the YAHOO! FINANCE API, so you have to select the ticker of the asset based on the yahoo!finance database")
