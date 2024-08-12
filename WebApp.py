@@ -171,11 +171,11 @@ def main():
 
     # Defining a good title, to make everything more clear
     st.write("# ",number_emojis[i-1],"MONTHLY RETURNS of", asset_name, "on the month of: ", NomiMesi1[i - 1], "\n")
-    st.write("# WIN RATE\t:", round(WinRate(Mese), 2), "%\n")
-    st.write("# AVERAGE RETURN\t:", round(Media(Mese), 2), "%\n")
+    st.write("# WIN RATE:", str(round(WinRate(Mese), 2)), "%\n")
+    st.write("# AVERAGE RETURN:", str(round(Media(Mese), 2)), "%\n")
 
     DevStd = math.sqrt(sum((x - Media(Mese)) ** 2 for x in Mese) / len(Mese))
-    st.write("### Standard deviation\t:", round(DevStd,2), "%")
+    st.write("### Standard deviation\t:", str(round(DevStd,2)), "%")
 
     st.write("Better excursion:", round(max(Mese), 2), "%")
     st.write("Worst excursion:", round(min(Mese), 2), "%")
@@ -442,9 +442,9 @@ def main():
     plt.figure(figsize=(10, 5))
     color = [Color2("red", "yellow", "blue", i, 40, 60) for i in WRComplessivi]
     plt.barh(Months_to_consider, WRComplessivi, color=color)
-    plt.axvline(25, color="red")
+    plt.axvline(40, color="red")
     plt.axvline(50, color="yellow")
-    plt.axvline(75, color="blue")
+    plt.axvline(60, color="blue")
     plt.legend(["Profitability at 40% or below", "Profitability from 40% to 60%", "Profitability at 60% or above"],
                loc='center left', bbox_to_anchor=(1, 0.5))
     plt.title("Overall months's profits chart")
