@@ -11,6 +11,21 @@ import math
 import matplotlib.patches as mpatches
 import altair as alt
 
+# Some information about me
+st.sidebar.write("# Who built this web application?")
+st.sidebar.write("My name is Nicola Chimenti.\nI'm currently pursuing a degree in \"Digital Economics\" and I love finance, programming and Data Science")
+st.sidebar.image("https://i.postimg.cc/7LynpkrL/Whats-App-Image-2024-07-27-at-16-36-44.jpg") # caption="My name is Nicola Chimenti.\nI'm currently pursuing a degree in \"Digital Economics\" and I love finance, programming and Data Science" , use_column_width=True)
+st.sidebar.write("\n# CONTACT ME")
+st.sidebar.write("### ◾ [LinkedIn](https://www.linkedin.com/in/nicolachimenti?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app)")
+st.sidebar.write("### ◾ Email: nicola.chimenti.work@gmail.com")
+st.sidebar.write("\n# RESOURCES")
+st.sidebar.write("◾ [GitHub Profile](https://github.com/TeknoTrader)")
+st.sidebar.write("◾ [MQL5 Profile](https://www.mql5.com/it/users/teknotrader) with reviews")
+st.sidebar.write("◾ [MT4 free softwares](https://www.mql5.com/it/users/teknotrader/seller#!category=2) for trading")
+st.sidebar.write("\n### Are you interested in the source code? 🧾")
+st.sidebar.write("Visit the [GitHub repository](https://github.com/TeknoTrader/OrganizationTools)")
+
+
 # MANCA SOLO:
 # 1) Error handling SP500: deve identificare qual è la prima "data non corrotta" e dire all'utente che cosa sta succedendo
 # 2) Codice IN INGLESE!!!
