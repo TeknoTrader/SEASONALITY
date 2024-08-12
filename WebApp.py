@@ -222,7 +222,7 @@ def main():
       ax.legend(handles=[
         plt.Line2D([0], [0], color="red", lw=4, label="Negative Months"),
         plt.Line2D([0], [0], color="blue", lw=4, label="Positive Months"),
-        plt.Line2D([0], [0], color="red", linestyle='--', lw=2, label= str("Average returns (" + str(Media(Mese) + ")")), band_patch],
+        plt.Line2D([0], [0], color="red", linestyle='--', lw=2, label= str("Average returns (" + str(Media(Mese)) + ")")), band_patch],
         loc='upper right'  # Posiziona la legenda nell'angolo in alto a destra
       )
 
