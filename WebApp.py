@@ -16,14 +16,11 @@ st.markdown("""
 .stApp {
     background-color: #c6e9f9;
 }
-
-#my-text {
-    color: #ffffff !important;
-}
 </style>
 """, unsafe_allow_html=True)
 
-st.write(":white[test for the color]")
+st.title("La mia app con sfondo scuro")
+st.write("<p style='color: #fff;'>Questo testo dovrebbe essere bianco</p>", unsafe_allow_html=True)
 
 # Some information about me
 st.sidebar.write("# Who built this web application?")
