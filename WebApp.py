@@ -26,6 +26,8 @@ st.sidebar.write("\n### Are you interested in the source code? 🧾")
 st.sidebar.write("Visit the [GitHub repository](https://github.com/TeknoTrader/OrganizationTools)")
 
 
+st.config(theme={"theme": "dark"})
+
 # MANCA SOLO:
 # 1) Error handling SP500: deve identificare qual è la prima "data non corrotta" e dire all'utente che cosa sta succedendo
 # 2) Codice IN INGLESE!!!
