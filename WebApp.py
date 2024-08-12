@@ -33,7 +33,7 @@ def Text(text):
 def Text2(text):
     st.subheader("<p style='color: #fff;'>" + text + "</p>", unsafe_allow_html=True)
 def Text3(text):
-    st.title("<p style='color: #fff;'>" + text + "</p>", unsafe_allow_html=True)
+    st.markdown(f"<h1 style='color: #fff;'>{text}</h1>", unsafe_allow_html=True)
 def Warning(text):
     st.warning("<p style='color: #fff;'>" + text + "</p>", unsafe_allow_html=True)
 
@@ -65,7 +65,7 @@ current_year = datetime.now().year  # Current year
 
 # Introduction for the user
 #st.write("# LET'S ANALYZE THE SEASONALITY OF AN ASSET 📊")
-Text("LET'S ANALYZE THE SEASONALITY OF AN ASSET 📊")
+Text3("LET'S ANALYZE THE SEASONALITY OF AN ASSET 📊")
 #st.write("### You have just to set: when to start with the monitoration,when to end and which is the asset to see")
 Text2("You have just to set: when to start with the monitoration,when to end and which is the asset to see")
 Text("Please, note that it has been used the YAHOO! FINANCE API, so you have to select the ticker of the asset based on the yahoo!finance database")
