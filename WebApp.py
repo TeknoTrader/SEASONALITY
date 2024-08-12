@@ -14,13 +14,13 @@ import altair as alt
 st.markdown("""
 <style>
 .stApp {
-    background-color: #c6e9f9;
+    background-color: #1a4054;
 }
 </style>
 """, unsafe_allow_html=True)
 
 st.title("La mia app con sfondo scuro")
-st.write("<p style='color: #fff;'>Questo testo dovrebbe essere bianco</p>", unsafe_allow_html=True)
+st.write("<p style='color: #000000;'>Questo testo dovrebbe essere bianco</p>", unsafe_allow_html=True)
 
 # Some information about me
 st.sidebar.write("# Who built this web application?")
