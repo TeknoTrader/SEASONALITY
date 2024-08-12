@@ -19,8 +19,9 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-st.title("La mia app con sfondo scuro")
-st.write("<p style='color: #000000;'>Questo testo dovrebbe essere bianco</p>", unsafe_allow_html=True)
+def Text_Black(text):
+    st.write("<p style='color: #000000;'>" + text + "</p>", unsafe_allow_html=True)
+st.Text_Black("Questo testo dovrebbe essere bianco")
 
 # Some information about me
 st.sidebar.write("# Who built this web application?")
