@@ -11,6 +11,18 @@ import math
 import matplotlib.patches as mpatches
 import altair as alt
 
+st.markdown("""
+<style>
+.stApp {
+    background-color: #1a4054;
+}
+
+#my-text {
+    color: #ffffff !important;
+}
+</style>
+""", unsafe_allow_html=True)
+
 # Some information about me
 st.sidebar.write("# Who built this web application?")
 st.sidebar.write("My name is Nicola Chimenti.\nI'm currently pursuing a degree in \"Digital Economics\" and I love finance, programming and Data Science")
@@ -24,18 +36,6 @@ st.sidebar.write("◾ [MQL5 Profile](https://www.mql5.com/it/users/teknotrader) 
 st.sidebar.write("◾ [MT4 free softwares](https://www.mql5.com/it/users/teknotrader/seller#!category=2) for trading")
 st.sidebar.write("\n### Are you interested in the source code? 🧾")
 st.sidebar.write("Visit the [GitHub repository](https://github.com/TeknoTrader/OrganizationTools)")
-
-st.markdown("""
-<style>
-.stApp {
-    background-color: #1a4054;
-}
-
-#my-text {
-    color: #ffffff !important;
-}
-</style>
-""", unsafe_allow_html=True)
 
 st.title("La mia app con sfondo scuro e testo bianco")
 st.write(f"<p id='my-text'>Questo testo dovrebbe essere bianco: {st.session_state.my_variable}</p>", unsafe_allow_html=True)
