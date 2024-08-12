@@ -61,7 +61,7 @@ AnnoPartenz = st.number_input("Starting year 📅: ", min_value=1850, max_value=
 Text_White("End year 📅: ")
 st.markdown("""
 <style>
-.stNumberInput input {
+.stNumberInput label {
     color: white;
 }
 </style>
