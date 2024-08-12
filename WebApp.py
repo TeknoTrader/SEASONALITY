@@ -31,7 +31,7 @@ st.markdown("""
 def Text(text):
     st.write("<p style='color: #fff;'>" + text + "</p>", unsafe_allow_html=True)
 def Text2(text):
-    st.subheader("<p style='color: #fff;'>" + text + "</p>", unsafe_allow_html=True)
+    st.markdown(f"<h2 style='color: #fff;'>{text}</h2>", unsafe_allow_html=True)
 def Text3(text):
     st.markdown(f"<h1 style='color: #fff;'>{text}</h1>", unsafe_allow_html=True)
 def Warning(text):
