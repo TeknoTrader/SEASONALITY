@@ -13,7 +13,6 @@ import altair as alt
 
 with st.sidebar:
     background_input = st.text_input("Background color:", value=#000000)
-with st.sidebar:
     text_input = st.text_input("Inserisci il tuo testo", value = #fff)
     
 # Markdown for Background
