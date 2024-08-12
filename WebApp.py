@@ -14,7 +14,7 @@ import altair as alt
 st.markdown("""
 <style>
 .stApp {
-    background-color: #649aba;
+    background-color: #e4e8ff;
 }
 </style>
 """, unsafe_allow_html=True)
