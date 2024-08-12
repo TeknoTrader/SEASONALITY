@@ -1,4 +1,3 @@
-# NB: used pip freeze to get requirements.txt
 import sys
 import streamlit as st
 import yfinance as yf
@@ -10,46 +9,6 @@ import pandas as pd
 import math
 import matplotlib.patches as mpatches
 import altair as alt
-
-with st.sidebar:
-    background_input = st.color_picker("Background color:", value= "#000000")
-    text_input = st.color_picker("Text color", value = "#fff")
-    
-# Markdown for Background
-st.markdown(f"""
-<style>
-.stApp {{
-    background-color: {background_input};
-}}
-</style>
-""", unsafe_allow_html=True)
-
-# Markdown for Number Input
-st.markdown(f"""
-<style>
-.stNumberInput label {{
-    color: {text_input};
-}}
-</style>
-""", unsafe_allow_html=True)
-
-# Markdown for Text Input
-st.markdown(f"""
-<style>
-.stTextInput label {{
-    color: {text_input};
-}}
-</style>
-""", unsafe_allow_html=True)
-
-def Text(text):
-    st.write("<p style='color: #fff;'>" + text + "</p>", unsafe_allow_html=True)
-def Text2(text):
-    st.markdown(f"<h2 style='color: #fff;'>{text}</h2>", unsafe_allow_html=True)
-def Text3(text):
-    st.markdown(f"<h1 style='color: #fff;'>{text}</h1>", unsafe_allow_html=True)
-def Warning(text):
-    st.warning("<p style='color: #fff;'>" + text + "</p>", unsafe_allow_html=True)
 
 # Some information about me
 st.sidebar.write("# Who built this web application?")
@@ -78,12 +37,11 @@ NomiMesi1 = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AU
 current_year = datetime.now().year  # Current year
 
 # Introduction for the user
-#st.write("# LET'S ANALYZE THE SEASONALITY OF AN ASSET 📊")
-Text3("LET'S ANALYZE THE SEASONALITY OF AN ASSET 📊")
-#st.write("### You have just to set: when to start with the monitoration,when to end and which is the asset to see")
-Text2("You have just to set: when to start with the monitoration,when to end and which is the asset to see")
-Text("Please, note that it has been used the YAHOO! FINANCE API, so you have to select the ticker of the asset based on the yahoo!finance database")
-Text("You can check the name of the asset 🔍 you're searching at this [link](%s)" % url)
+st.write("# LET'S ANALYZE THE SEASONALITY OF AN ASSET 📊")
+st.write("### You have just to set: when to start with the monitoration,when to end and which is the asset to see")
+st.write(
+    "Please, note that it has been used the YAHOO! FINANCE API, so you have to select the ticker of the asset based on the yahoo!finance database")
+st.write("You can check the name of the asset 🔍 you're searching at this [link](%s)" % url)
 
 AnnoPartenz = st.number_input("Starting year 📅: ", min_value=1850, max_value=current_year - 1, step=1)
 
@@ -124,25 +82,25 @@ asset_name = info.get('longName', 'N/A')
 def main():
     AnnoFine = int(AnnoFin)
     end = date(AnnoFine, 1, 1)
-    st.write()
-    Text(f"End of the relevation: {date(AnnoFine, 1, 1)}")
+    st.write("\nEnd of the relevation: \t", end)
     year = 0
     try:
         data = yf.download(ticker)
         if not data.empty:
-        # Find the first data avaible, to avoid errors
+            # Find the first data avaible, to avoid errors
             first_date = data.index[0]
-            Text("Data of ", ticker, " avaible from: ", first_date.date())
+            st.write("Data of ", ticker, " avaible from: ", first_date.date())
             year = int(first_date.strftime('%Y'))
         else:
             st.warning(f"# ⚠️ The asset {ticker} doesn't exist. ⚠️")
-            Text2("Maybe you didn't select the right ticker.\n You can find here the [Yahoo finance ticker's list](url)")
+            st.write(
+                "### Maybe you didn't select the right ticker.\n### You can find here the [Yahoo finance ticker's list](url)")
             sys.exit(1)
     except Exception as e:
         # Se non ci sono dati disponibili, fornire un messaggio personalizzato
-        st.warning(f"⚠️ The asset {ticker} doesn't exist. ⚠️")
-        Text2("Maybe you didn't select the right ticker.")
-        Text2("You can find here the [Yahoo finance ticker's list](url)")
+        st.warning(f"# ⚠️ The asset {ticker} doesn't exist. ⚠️")
+        st.write(
+            "### Maybe you didn't select the right ticker.\n### You can find here the [Yahoo finance ticker's list](url)")
         sys.exit(1)
 
     # Controls to do: there must be no invalid periods of time
@@ -153,7 +111,7 @@ def main():
         sys.exit(1)
 
     end = date(AnnoFine, 1, 1)
-    Text(f"\nEnd year at: {end}")
+    st.write("\nEnd year at: \t", end)
 
     if year < AnnoPartenz:
         AnnoPartenza = AnnoPartenz
@@ -172,7 +130,7 @@ def main():
 
     inizio = date(AnnoPartenza, 1, 1)
     # Now we download the serious data
-    Text(f"\nStarting calculations from: {inizio}")
+    st.write("\nStarting calculations from: \t", inizio)
 
     df = yf.download(ticker, start=inizio, end=end, interval="1mo")
 
@@ -201,7 +159,7 @@ def main():
     W = 600  # Chart
     H = 600  # Chart Height
 
-    Text3("LET'S SEE THE RESULTS 📈")
+    st.write("# LET'S SEE THE RESULTS 📈")
     Months = st.checkbox("Represent all months")
 
     first_representation_model = "Not longer"
@@ -234,15 +192,16 @@ def main():
             colori.append(Color("#FF0000", "#0000FF", Y, 0))
 
         # Defining a good title, to make everything more clear
-        Text3("f {number_emojis[i - 1]} MONTHLY RETURNS of {asset_name} on the month of: {NomiMesi1[i - 1]}\n")
-        Text3(f"WIN RATE: {round(WinRate(Mese), 2)} %\n")
-        Text3(f"AVERAGE RETURN: {str(round(Media(Mese), 2))} %\n")
+        st.write("# ", number_emojis[i - 1], "MONTHLY RETURNS of", asset_name, "on the month of: ", NomiMesi1[i - 1],
+                 "\n")
+        st.write("# WIN RATE:", str(round(WinRate(Mese), 2)) + "%\n")
+        st.write("# AVERAGE RETURN:", str(round(Media(Mese), 2)) + "%\n")
 
         DevStd = math.sqrt(sum((x - Media(Mese)) ** 2 for x in Mese) / len(Mese))
-        Text2(f"Standard deviation: {str(round(DevStd, 2))} %")
+        st.write("### Standard deviation\t:", str(round(DevStd, 2)) + "%")
 
-        Text(f"Better excursion: {round(max(Mese), 2)} %")
-        Text(f"Worst excursion: {round(min(Mese), 2)} %")
+        st.write("Better excursion:", round(max(Mese), 2), "%")
+        st.write("Worst excursion:", round(min(Mese), 2), "%")
 
         options = ["Image", "Interactive"]
         key = f'select_{i + 1}'
