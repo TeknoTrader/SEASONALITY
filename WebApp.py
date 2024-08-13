@@ -1074,11 +1074,11 @@ def Simple_strategy():
         st.write("Please click 'Ready to go!' to calculate and display the data.")
 
 def credits():
-    st.write("# Who built this web application?")
-    st.write(
-        "My name is Nicola Chimenti.\nI'm currently pursuing a degree in \"Digital Economics\" and I love finance, programming and Data Science")
-    st.image(
-        "https://i.postimg.cc/7LynpkrL/Whats-App-Image-2024-07-27-at-16-36-44.jpg")  # caption="My name is Nicola Chimenti.\nI'm currently pursuing a degree in \"Digital Economics\" and I love finance, programming and Data Science" , use_column_width=True)
+    Text3("Who built this web application?")
+    Text2("I'm Nicola Chimenti and I love finance, programming and Data Science")
+    Text2("My main goal is to break into a Quantitative Trading Firm")
+    st.image("https://i.postimg.cc/7LynpkrL/Whats-App-Image-2024-07-27-at-16-36-44.jpg")  # caption="My name is Nicola Chimenti.\nI'm currently pursuing a degree in \"Digital Economics\" and I love finance, programming and Data Science" , use_column_width=True)
+    Text2("I'm currently pursuing a degree in \"Digital Economics\" and I program trading softwares (VAT Code: 02674000464) for traders who want to automatize their strategy or analyze certain data to find a better edge")
     st.write("\n# CONTACT ME")
     st.write(
         "### ◾ [LinkedIn](https://www.linkedin.com/in/nicolachimenti?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app)")
