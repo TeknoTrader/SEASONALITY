@@ -26,12 +26,6 @@ label_color = "#FFFFFF"
 
 # DA MODIFICARE LA SIDEBAR
 
-def Media(Arr):
-    tot = 0
-    for i in Arr:
-        tot += i
-    return (tot / len(Arr))
-
 def WinRate(Arr):
     tot = 0
     for i in Arr:
@@ -41,6 +35,123 @@ def WinRate(Arr):
         return 0
     else:
         return (100 / len(Arr) * tot)
+
+def Sortino_Ratio(returns, risk_free_rate=0, target_return=0):
+    """
+        Calcola il Sortino Ratio.
+
+        Parameters:
+        returns (array-like): Array o lista dei rendimenti del portafoglio o dell'investimento.
+        risk_free_rate (float): Tasso di rendimento privo di rischio. Default è 0.
+        target_return (float): Rendimento target o minimo accettabile. Default è 0.
+
+        Returns:
+        float: Il Sortino Ratio.
+        """
+    # Calcolo dell'excess return (rendimento in eccesso rispetto al tasso privo di rischio)
+    excess_returns = np.array(returns) - risk_free_rate
+
+    # Calcolo della downside deviation
+    downside_deviation = np.sqrt(np.mean(np.minimum(0, excess_returns - target_return) ** 2))
+
+    # Calcolo del Sortino Ratio
+    if downside_deviation == 0:
+        return np.nan  # Evita divisione per zero, restituisce NaN
+    sortino_ratio = np.mean(excess_returns) / downside_deviation
+
+    return sortino_ratio
+
+def Treynor_Ratio(returns, market_returns, risk_free_rate=0):
+    """
+        Calcola il Treynor Ratio.
+
+        Parameters:
+        returns (array-like): Array o lista dei rendimenti del portafoglio o dell'investimento.
+        market_returns (array-like): Array o lista dei rendimenti del mercato di riferimento.
+        risk_free_rate (float): Tasso di rendimento privo di rischio. Default è 0.
+
+        Returns:
+        float: Il Treynor Ratio.
+        """
+    # Calcolo del rendimento medio del portafoglio e del mercato
+    portfolio_return = np.mean(returns)
+    market_return = np.mean(market_returns)
+
+    # Calcolo del beta (coefficiente di regressione tra rendimenti del portafoglio e del mercato)
+    covariance = np.cov(returns, market_returns)[0, 1]
+    variance_market = np.var(market_returns)
+    beta = covariance / variance_market
+
+    # Calcolo del Treynor Ratio
+    treynor_ratio = (portfolio_return - risk_free_rate) / beta
+
+    return treynor_ratio
+
+def Profit_Factor(trades):
+    """
+        Calcola il Profit Factor.
+
+        Parameters:
+        trades (array-like): Lista dei profitti e delle perdite per ogni operazione.
+
+        Returns:
+        float: Il Profit Factor.
+        """
+    # Separare le operazioni vincenti e perdenti
+    profits = [trade for trade in trades if trade > 0]
+    losses = [-trade for trade in trades if trade < 0]
+
+    # Calcolare il totale dei profitti e delle perdite
+    total_profits = sum(profits)
+    total_losses = sum(losses)
+
+    # Calcolare il Profit Factor
+    if total_losses == 0:
+        return float('inf')  # Evita divisione per zero, restituisce infinito
+    profit_factor = total_profits / total_losses
+
+    return profit_factor
+
+def Volatility(returns):
+    """
+        Calcola la volatilità di una strategia di trading.
+
+        Parameters:
+        returns (array-like): Lista o array dei rendimenti della strategia.
+
+        Returns:
+        float: La volatilità (deviazione standard) dei rendimenti.
+        """
+    # Calcolo della volatilità
+    volatility = np.std(returns, ddof=1)  # ddof=1 per calcolare la deviazione standard campionaria
+
+    return volatility
+
+def Max_Drawdown(Historycal_Drawdowns):
+    return max(Historycal_Drawdowns)
+
+def Omega_Ratio(returns, threshold):
+    """
+    Calcola l'Omega Ratio.
+
+    Parameters:
+    returns (array-like): Lista o array dei rendimenti della strategia.
+    threshold (float): La soglia di rendimento minimo accettabile (MAR).
+
+    Returns:
+    float: L'Omega Ratio.
+    """
+    # Calcolo delle parti superiore e inferiore della formula dell'Omega Ratio
+    positive_part = np.sum(np.maximum(returns - threshold, 0))
+    negative_part = np.sum(np.maximum(threshold - returns, 0))
+
+    if negative_part == 0:
+        return float('inf')  # Evita divisione per zero, restituisce infinito
+
+    # Calcolo dell'Omega Ratio
+    omega_ratio = positive_part / negative_part
+
+    return omega_ratio
 
     # Select the colors of the chart
 def Color(negclr, posclr, element, minimum):
@@ -83,7 +194,7 @@ def credits():
     # Some information about me
     st.sidebar.write("# Who built this web application?")
     st.sidebar.write(
-        "My name is Nicola Chimenti.\nI'm currently pursuing a degree in \"Digital Economics\" and I love finance, programming and Data Science")
+        "My name is Nicola Chimenti.\nI'm currently pursuing a degree in \"Digital Economics\" and I program trading sotwares for traders who want to automatize their strategies.")
     st.sidebar.image(
         "https://i.postimg.cc/7LynpkrL/Whats-App-Image-2024-07-27-at-16-36-44.jpg")  # caption="My name is Nicola Chimenti.\nI'm currently pursuing a degree in \"Digital Economics\" and I love finance, programming and Data Science" , use_column_width=True)
     st.sidebar.write("\n# CONTACT ME")
@@ -281,9 +392,9 @@ def main_page():
                 # Defining a good title, to make everything more clear
                 Text3(f" {number_emojis[i - 1]} MONTHLY RETURNS of {asset_name} on the month of: {NomiMesi1[i - 1]} \n")
                 Text3(f"WIN RATE: {str(round(WinRate(Mese), 2))}%\n")
-                Text3(f"AVERAGE RETURN: {str(round(Media(Mese), 2))} %\n")
+                Text3(f"AVERAGE RETURN: {str(round(np.mean(Mese), 2))} %\n")
 
-                DevStd = math.sqrt(sum((x - Media(Mese)) ** 2 for x in Mese) / len(Mese))
+                DevStd = math.sqrt(sum((x - np.mean(Mese)) ** 2 for x in Mese) / len(Mese))
                 Text2(f"Standard deviation: {str(round(DevStd, 2))}%")
 
                 Text(f"Better excursion: {round(max(Mese), 2)}%")
@@ -305,7 +416,7 @@ def main_page():
                     ax.bar(Annate, Mese, color=['blue' if x >= 0 else 'red' for x in Mese])
 
                     # Aggiungi la linea della media
-                    ax.axhline(Media(Mese), color="red", linestyle='--', linewidth=2)
+                    ax.axhline(np.mean(Mese), color="red", linestyle='--', linewidth=2)
                     ax.axhline(0, color="green")
 
                     # Aggiungi le etichette degli assi
@@ -319,8 +430,8 @@ def main_page():
                     # Aggiungi la banda della deviazione standard
                     ax.fill_between(
                         Annate,
-                        Media(Mese) + DevStd,
-                        Media(Mese) - DevStd,
+                        np.mean(Mese) + DevStd,
+                        np.mean(Mese) - DevStd,
                         color='gray',
                         alpha=0.3,
                         hatch="X",
@@ -333,7 +444,7 @@ def main_page():
                         plt.Line2D([0], [0], color="red", lw=4, label="Negative Months"),
                         plt.Line2D([0], [0], color="blue", lw=4, label="Positive Months"),
                         plt.Line2D([0], [0], color="red", linestyle='--', lw=2,
-                                   label=str("Average returns (" + str(round(Media(Mese), 2)) + "%)")), band_patch],
+                                   label=str("Average returns (" + str(round(np.mean(Mese), 2)) + "%)")), band_patch],
                         loc='upper right'
                     )
 
@@ -355,7 +466,7 @@ def main_page():
                     Assex = Annate1
                     Assey = Mese
 
-                    Valore_Media = Media(Mese)
+                    Valore_Media = np.mean(Mese)
 
                     # Crea un DataFrame
                     df = pd.DataFrame({
@@ -738,6 +849,9 @@ def Simple_strategy():
     WRComplessivi = []
     MesiComplessivi = []
     Months_to_consider = []
+    trades = []
+    Sortin = []
+    MaxDD = []
     NomiMesi2 = ["01-Jan", "02-Feb", "03-Mar", "04-Apr", "05-May", "06-JuN", "07-JuL", "08-Aug", "09-Sept",
                  "10-Oct",
                  "11-Nov",
@@ -859,21 +973,124 @@ def Simple_strategy():
         st.session_state.WRComplessivi = []
     if 'Months_to_consider' not in st.session_state:
         st.session_state.Months_to_consider = []
+    if 'Trades' not in st.session_state:
+        st.session_state.Trades = []
+    if 'Negative' not in st.session_state:
+        st.session_state.Negative = []
+    if 'Positive' not in st.session_state:
+        st.session_state.Positive = []
+    if 'Sortin' not in st.session_state:
+        st.session_state.Sortin = []
+    if 'MaxDD' not in st.session_state:
+        st.session_state.MaxDD = []
 
     if st.button('Ready to go!'):
         st.session_state.MesiComplessivi = []
         st.session_state.WRComplessivi = []
         st.session_state.Months_to_consider = []
+        st.session_state.Trades = []
+        st.session_state.Sortin = []
+        st.session_state.MaxDD = []
+        st.session_state.Negative = []
+        st.session_state.Positive = []
 
         for i in range(1, 13):
             if (Months == True) or (NomiMesi1[i - 1] in options):
                 Mese = Mensilit(i, AnnoPartenza, AnnoFine)
-                st.session_state.MesiComplessivi.append(round(Media(Mese), 2))
+                st.session_state.MesiComplessivi.append(round(np.mean(Mese), 2))
                 st.session_state.WRComplessivi.append(round(WinRate(Mese), 2))
                 st.session_state.Months_to_consider.append(NomiMesi2[i - 1])
+                st.session_state.Trades.append(round(Profit_Factor(Mese), 2))
+                st.session_state.Sortin.append(round(Sortino_Ratio(Mese), 2))
+                st.session_state.MaxDD.append(round(min(Low(i, AnnoPartenza, AnnoFine)), 2))
+                st.session_state.Positive.append([High(i, AnnoPartenza, AnnoFine)])
+                st.session_state.Negative.append([Low(i, AnnoPartenza, AnnoFine)])
 
         st.session_state.data_calculated = True
 
+    # DATABASE
+    representation_database = st.selectbox("Database Representation Method: ",
+                                           ("User Friendly", "For CSV download"))
+
+    if representation_database == "For CSV download":
+        def format_value(val):
+            return f"{'+' if val > 0 else ''}{val:.2f}%"
+
+        Results = pd.DataFrame({
+            "Month": st.session_state.Months_to_consider,
+            "Average Win Rate": [format_value(x) for x in st.session_state.WRComplessivi],
+            "Average Monthly Return": [format_value(x) for x in st.session_state.MesiComplessivi],
+            "Max Drawdown": [x for x in st.session_state.MaxDD],
+            "Profit Factor": [x for x in st.session_state.Trades],
+            "Sortino Ratio": [x for x in st.session_state.Sortin]
+        })
+        st.dataframe(Results, hide_index=True)
+    else:
+
+        def format_value(val, include_sign=True, include_percent=True):
+            if isinstance(val, str):
+                return val
+            sign = '+' if val > 0 and include_sign else ''
+            percent = '%' if include_percent else ''
+            return f"{sign}{val:.2f}{percent}"
+
+        def style_cell(val, color):
+            return f'color: {color}; font-weight: bold; text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;'
+
+        def color_win_rate(val):
+            val = float(val.strip('%').strip('+'))
+            return style_cell(val, 'red' if val < 50 else 'blue')
+
+        def color_monthly_return(val):
+            val = float(val.strip('%').strip('+'))
+            return style_cell(val, 'red' if val < 0 else 'blue')
+
+        def color_max_drawdown(val):
+            val = float(val.strip('%').strip('+'))
+            return style_cell(val, color)
+
+        def color_profit_factor(val):
+            val = float(val)
+            return style_cell(val, 'red' if val < 1 else 'blue')
+
+        # Pandas dataframe creation
+        table1 = pd.DataFrame({
+            "Month": st.session_state.Months_to_consider,
+            "Average Win Rate": [format_value(x) for x in st.session_state.WRComplessivi],
+            "Average Monthly Return": [format_value(x) for x in st.session_state.MesiComplessivi],
+            "Max Drawdown": [format_value(x) for x in st.session_state.MaxDD],
+            "Profit Factor": [format_value(x, include_percent=False) for x in st.session_state.Trades],
+            "Sortino Ratio": [format_value(x, include_percent=False) for x in st.session_state.Sortin]
+        })
+
+        # Calculate mean and standard deviation for Max Drawdown
+        max_drawdown_values = [float(x.strip('%').strip('+')) for x in table1["Max Drawdown"]]
+
+        # Other representation "simpler"
+        mean_drawdown = np.mean(max_drawdown_values)
+        std_drawdown = np.std(max_drawdown_values)
+
+        def color_max_drawdown(val):
+            val = float(val.strip('%').strip('+'))
+            if val < mean_drawdown - std_drawdown:
+                color = 'red'
+            elif val > mean_drawdown + std_drawdown:
+                color = 'blue'
+            else:
+                color = 'black'
+            return style_cell(val, color)
+
+        # Apply styles
+        styled_table = table1.style.applymap(color_win_rate, subset=['Average Win Rate']) \
+            .applymap(color_monthly_return, subset=['Average Monthly Return']) \
+            .applymap(color_max_drawdown, subset=['Max Drawdown']) \
+            .applymap(color_profit_factor, subset=['Profit Factor', 'Sortino Ratio']) \
+            .applymap(lambda x: style_cell(x, 'black'), subset=['Month'])
+
+        # Display the styled table
+        st.write(styled_table.to_html(escape=False), unsafe_allow_html=True)
+
+    # CHARTS
     if st.session_state.data_calculated:
         rep = st.selectbox("Representation method: ", ("Image", "Interactive"))
 
@@ -1056,20 +1273,6 @@ def Simple_strategy():
             combined_chart = alt.hconcat(chart, legend)
 
             st.altair_chart(combined_chart, use_container_width=True)
-
-        representation_database = st.selectbox("Database Representation Method: ",
-                                               ("User Friendly", "For CSV download"))
-
-        if representation_database == "For CSV download":
-            def format_value(val):
-                return f"{'+' if val > 0 else ''}{val:.2f}%"
-
-            Results = pd.DataFrame({
-                "Month": st.session_state.Months_to_consider,
-                "Average Win Rate": [format_value(x) for x in st.session_state.WRComplessivi],
-                "Average Monthly Return": [format_value(x) for x in st.session_state.MesiComplessivi]
-            })
-            st.dataframe(Results, hide_index=True)
     else:
         st.write("Please click 'Ready to go!' to calculate and display the data.")
 
@@ -1078,7 +1281,8 @@ def credits():
     Text2("I'm Nicola Chimenti and I love finance, programming and Data Science")
     Text2("My main goal is to break into a Quantitative Trading Firm")
     st.image("https://i.postimg.cc/7LynpkrL/Whats-App-Image-2024-07-27-at-16-36-44.jpg")  # caption="My name is Nicola Chimenti.\nI'm currently pursuing a degree in \"Digital Economics\" and I love finance, programming and Data Science" , use_column_width=True)
-    Text2("I'm currently pursuing a degree in \"Digital Economics\" and I program trading softwares (VAT Code: 02674000464) for traders who want to automatize their strategy or analyze certain data to find a better edge")
+    Text2(
+        "I'm currently pursuing a degree in \"Digital Economics\" and I program trading softwares (VAT Code: 02674000464) for traders who want to automatize their strategy or analyze certain data to find a better edge")
     st.write("\n# CONTACT ME")
     st.write(
         "### ◾ [LinkedIn](https://www.linkedin.com/in/nicolachimenti?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app)")
@@ -1109,7 +1313,6 @@ def Home():
     Text2("User-Friendly Interface: Intuitive design that makes complex analysis accessible to all levels of investors.")
     Text3("Start exploring the markets like never before with this web app. Your strategic edge is just a few clicks away.")
 
-# Defining the pages
 pagine = ["Home", "Analysis", "Basic Strategy", "Credits"]
 
 # Navigation menu
@@ -1215,14 +1418,45 @@ def nav_buttons():
         if cols[idx].button(page, key=f"nav_{page}_{st.session_state.selezione_pagina}"):
             st.session_state.selezione_pagina = page
             st.experimental_rerun()
+
+
 def sidebar_nav():
-    st.sidebar.title("Navigation")
+    st.sidebar.title("Web App Pages")
     for page, description in pagine.items():
-        if st.sidebar.button(page, key=f"sidebar_{page}"):
-            st.session_state.selezione_pagina = page
-            st.experimental_rerun()
-        st.sidebar.markdown(f"<small>{description}</small>", unsafe_allow_html=True)
-        st.sidebar.markdown("---")  # Aggiunge una linea di separazione tra i pulsanti
+        # Contenitore principale con flexbox
+        with st.sidebar.container():
+            st.markdown("""
+            <div class="flex-container">
+            """, unsafe_allow_html=True)
+
+            # Botton & image
+            col1, col2, col3 = st.columns([1, 2, 1])
+            with col1:
+                st.image("https://i.postimg.cc/7LynpkrL/Whats-App-Image-2024-07-27-at-16-36-44.jpg", width=30)
+            with col2:
+                if st.button(page, key=f"sidebar_{page}"):
+                    st.session_state.selezione_pagina = page
+                    st.experimental_rerun()
+
+            # Closing
+            st.markdown("""
+            </div>
+            """, unsafe_allow_html=True)
+
+            # Description
+            st.markdown(f"""
+            <style>
+            .white-text {{
+              color: white;
+            }}
+            .flex-container {{
+                display: flex;
+                align-items: center;
+            }}
+            </style>
+
+            <p class="white-text">{description}</p>
+            """, unsafe_allow_html=True)
 
 # Inizializzazione della variabile di stato per la selezione della pagina
 if 'selezione_pagina' not in st.session_state:
