@@ -750,6 +750,22 @@ def main_page():
     if (ticker != ""):
         main()
 
+#Drawdown for BUY
+def drawdown(min, close):
+    act = 0
+    drawdowns = []
+
+    for m, c in zip(min, close):
+        if (act >= 0):
+            drawdowns.append(m)
+        else:
+            drawdowns.append(act + m)
+        act += c
+        if (act > 0):
+            act = 0
+        else:
+            act = act
+    return drawdowns
 
 def Simple_strategy():
     AnnoPartenz = st.number_input("Starting year 📅: ", min_value=1850, max_value=current_year - 1, step=1)
@@ -851,6 +867,7 @@ def Simple_strategy():
     Months_to_consider = []
     trades = []
     Sortin = []
+    DD = []
     MaxDD = []
     NomiMesi2 = ["01-Jan", "02-Feb", "03-Mar", "04-Apr", "05-May", "06-JuN", "07-JuL", "08-Aug", "09-Sept",
                  "10-Oct",
@@ -983,6 +1000,8 @@ def Simple_strategy():
         st.session_state.Sortin = []
     if 'MaxDD' not in st.session_state:
         st.session_state.MaxDD = []
+    if 'DD' not in st.session_state:
+        st.session_state.DD = []
 
     if st.button('Ready to go!'):
         st.session_state.MesiComplessivi = []
@@ -991,6 +1010,7 @@ def Simple_strategy():
         st.session_state.Trades = []
         st.session_state.Sortin = []
         st.session_state.MaxDD = []
+        st.session_state.DD = []
         st.session_state.Negative = []
         st.session_state.Positive = []
 
@@ -1000,9 +1020,11 @@ def Simple_strategy():
                 st.session_state.MesiComplessivi.append(round(np.mean(Mese), 2))
                 st.session_state.WRComplessivi.append(round(WinRate(Mese), 2))
                 st.session_state.Months_to_consider.append(NomiMesi2[i - 1])
+                drawdowns = drawdown(Low(i, AnnoPartenza, AnnoFine), Mese)
+                st.session_state.DD.append(drawdowns)
                 st.session_state.Trades.append(round(Profit_Factor(Mese), 2))
                 st.session_state.Sortin.append(round(Sortino_Ratio(Mese), 2))
-                st.session_state.MaxDD.append(round(min(Low(i, AnnoPartenza, AnnoFine)), 2))
+                st.session_state.MaxDD.append(round(min(drawdowns), 2))
                 st.session_state.Positive.append([High(i, AnnoPartenza, AnnoFine)])
                 st.session_state.Negative.append([Low(i, AnnoPartenza, AnnoFine)])
 
