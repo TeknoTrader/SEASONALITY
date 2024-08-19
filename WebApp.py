@@ -1319,7 +1319,8 @@ def credits():
 def Home():
     Text3("Welcome to the \'Tekno Trader's Seasonality Application\'")
     Text2("Unlock the power of historical market analysis with the \'Tekno Trader's Seasonality Application\'. Whether you're a seasoned investor or just starting out, our web app provides the insights you need to make informed decisions in today's dynamic financial environment.")
-
+    st.link_button("Strategy", "https://seasonalityanalysis.streamlit.app/~/+/#craft-winning-strategies")
+    
     Text3("Analyze Market Behavior:")
     Text2("Dive deep into the historical performance of your chosen markets in specific months. With this web application, you can analyze how markets have behaved over specific time windows, identifying regularities and patterns. Curious if September is traditionally a tough month for the S&P 500? Our platform helps you uncover these insights, allowing you to predict market trends with greater accuracy.")
 
