@@ -24,6 +24,9 @@ header_color = "#880C14"
 #text_color = "#FFFFFF"
 label_color = "#FFFFFF"
 
+# Photos
+url_analysis = "https://i.postimg.cc/5yFWvkJV/Analysis-screen.png"
+
 # DA MODIFICARE LA SIDEBAR
 
 def WinRate(Arr):
@@ -1318,22 +1321,59 @@ def credits():
 
 def Home():
     Text3("Welcome to the \'Tekno Trader's Seasonality Application\'")
-    Text2("Unlock the power of historical market analysis with the \'Tekno Trader's Seasonality Application\'. Whether you're a seasoned investor or just starting out, our web app provides the insights you need to make informed decisions in today's dynamic financial environment.")
-    st.link_button("Strategy", "https://seasonalityanalysis.streamlit.app/~/+/#craft-winning-strategies")
-    
+    Text("Unlock the power of historical market analysis with the \'Tekno Trader's Seasonality Application\'. Whether you're a seasoned investor or just starting out, our web app provides the insights you need to make informed decisions in today's dynamic financial environment.")
+    st.divider()
+    # Links
+    col1, col2, col3, col4 = st.columns(4)
+    with col1:
+        Text("See simple strategies' performances")
+        st.link_button("Strategy", "https://seasonalityanalysis.streamlit.app/~/+/#craft-winning-strategies")
+    with col2:
+        Text("Start with analyzing market data")
+        st.link_button("Analysis", "google.com")
+    with col3:
+        Text("Istructions and suggestions")
+        st.link_button("Why to use it", "google.com")
+    with col4:
+        Text("To keep in consideration while using the web app")
+        st.link_button("Keep in mind", "google.com")
+    st.divider()
+
     Text3("Analyze Market Behavior:")
-    Text2("Dive deep into the historical performance of your chosen markets in specific months. With this web application, you can analyze how markets have behaved over specific time windows, identifying regularities and patterns. Curious if September is traditionally a tough month for the S&P 500? Our platform helps you uncover these insights, allowing you to predict market trends with greater accuracy.")
+    Text("Dive deep into the historical performance of your chosen markets in specific months. With this web application, you can analyze how markets have behaved over specific time windows, identifying regularities and patterns. Curious if September is traditionally a tough month for the S&P 500? Our platform helps you uncover these insights, allowing you to predict market trends with greater accuracy.")
+    # Button print
+    col1, col2, col3 = st.columns(3)
+
+    with col2:
+        if st.button("Go to 'Analysis' page", key="analysis_button"):
+            go_to_analysis()
+
+    # Centered photo
+    st.markdown(
+        f"""
+        <div style="text-align: center;">
+            <img src="{url_analysis}" alt="Image" style="width: 300px;">
+            <p style="font-size: 16px; color: white;">Example with 'GOOG' stock</p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+    st.divider()
 
     Text3("Craft Winning Strategies:")
-    Text2("Develop and test simple yet effective market entry and exit strategies. Choose a specific month to enter the market and another to exit, then evaluate the potential success of your strategy with a range of performance indicators. See how your strategy would have performed historically, and gain confidence in your trading decisions.")
+    Text("Develop and test simple yet effective market entry and exit strategies. Choose a specific month to enter the market and another to exit, then evaluate the potential success of your strategy with a range of performance indicators. See how your strategy would have performed historically, and gain confidence in your trading decisions.")
+    st.divider()
 
     Text3("In-Sample and Out-of-Sample Analysis:")
-    Text2("Measure the robustness of your strategy with our advanced in-sample and out-of-sample analysis tools. Understand not only how your strategy performs on historical data but also how it holds up in new, unseen data, helping you reduce the risk of overfitting and optimize your investment approach.")
+    Text("Measure the robustness of your strategy with our advanced in-sample and out-of-sample analysis tools. Understand not only how your strategy performs on historical data but also how it holds up in new, unseen data, helping you reduce the risk of overfitting and optimize your investment approach.")
+    st.divider()
 
     Text3("Why Choose MarketTrend Pro?")
-    Text2("Comprehensive Data Access: Powered by the Yahoo Finance API, get accurate and up-to-date financial market data.")
-    Text2("Customizable Analysis: Tailor your analysis to specific markets, time frames, and strategies.")
-    Text2("User-Friendly Interface: Intuitive design that makes complex analysis accessible to all levels of investors.")
+    Text("Comprehensive Data Access: Powered by the Yahoo Finance API, get accurate and up-to-date financial market data.")
+    Text("Customizable Analysis: Tailor your analysis to specific markets, time frames, and strategies.")
+    Text("User-Friendly Interface: Intuitive design that makes complex analysis accessible to all levels of investors.")
+    st.divider()
+
     Text3("Start exploring the markets like never before with this web app. Your strategic edge is just a few clicks away.")
 
 pagine = ["Home", "Analysis", "Basic Strategy", "Credits"]
@@ -1445,6 +1485,8 @@ def nav_buttons():
 
 def sidebar_nav():
     st.sidebar.title("Web App Pages")
+    counter = 0
+    Links = [[url_analysis, 50], [url_analysis, 50], [url_analysis, 50], ["https://i.postimg.cc/7LynpkrL/Whats-App-Image-2024-07-27-at-16-36-44.jpg", 30]]
     for page, description in pagine.items():
         # Contenitore principale con flexbox
         with st.sidebar.container():
@@ -1455,7 +1497,8 @@ def sidebar_nav():
             # Botton & image
             col1, col2, col3 = st.columns([1, 2, 1])
             with col1:
-                st.image("https://i.postimg.cc/7LynpkrL/Whats-App-Image-2024-07-27-at-16-36-44.jpg", width=30)
+                st.image(Links[counter][0], width=Links[counter][1])
+            counter += 1
             with col2:
                 if st.button(page, key=f"sidebar_{page}"):
                     st.session_state.selezione_pagina = page
