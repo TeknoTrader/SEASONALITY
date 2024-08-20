@@ -1,14 +1,15 @@
+import math
 import sys
-import streamlit as st
-import yfinance as yf
-import matplotlib.pyplot as plt
 from datetime import date
 from datetime import datetime
+
+import altair as alt
+import matplotlib.patches as mpatches
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import math
-import matplotlib.patches as mpatches
-import altair as alt
+import streamlit as st
+import yfinance as yf
 
 # COLORI DA INSERIRE
 # text, widget e label = bianco
@@ -26,6 +27,8 @@ label_color = "#FFFFFF"
 
 # Photos
 url_analysis = "https://i.postimg.cc/5yFWvkJV/Analysis-screen.png"
+url_strategy = "https://i.postimg.cc/ncT1PhkP/screen-contorno.png"
+url_strategy2 = "https://i.postimg.cc/WbYzhB8y/strategy-red.png"
 
 # DA MODIFICARE LA SIDEBAR
 
@@ -38,57 +41,52 @@ def WinRate(Arr):
         return 0
     else:
         return (100 / len(Arr) * tot)
+def Sortino_Ratio_Benchmark(returns, benchmark_ticker=None, period='1y'):
+    if isinstance(returns, pd.Series):
+        returns_array = returns.values
+    else:
+        returns_array = np.array(returns)
 
-def Sortino_Ratio(returns, risk_free_rate=0, target_return=0):
-    """
-        Calcola il Sortino Ratio.
+    # Se un benchmark è fornito, scarica i dati e calcola i rendimenti
+    if benchmark_ticker:
+        benchmark_data = yf.download(benchmark_ticker, period=period)
 
-        Parameters:
-        returns (array-like): Array o lista dei rendimenti del portafoglio o dell'investimento.
-        risk_free_rate (float): Tasso di rendimento privo di rischio. Default è 0.
-        target_return (float): Rendimento target o minimo accettabile. Default è 0.
+        # Controlla se i dati del benchmark sono stati scaricati correttamente
+        if len(benchmark_data) == 0:
+            raise ValueError("Impossibile scaricare i dati del benchmark.")
 
-        Returns:
-        float: Il Sortino Ratio.
-        """
-    # Calcolo dell'excess return (rendimento in eccesso rispetto al tasso privo di rischio)
-    excess_returns = np.array(returns) - risk_free_rate
+        benchmark_returns = (benchmark_data['Close'] - benchmark_data["Open"]).pct_change().dropna().values
 
-    # Calcolo della downside deviation
-    downside_deviation = np.sqrt(np.mean(np.minimum(0, excess_returns - target_return) ** 2))
+        # Adatta la lunghezza del benchmark a quella dei rendimenti forniti
+        min_length = min(len(returns_array), len(benchmark_returns))
+        returns_array = returns_array[-min_length:]
+        benchmark_returns = benchmark_returns[-min_length:]
+
+        # Calcola l'excess return rispetto al benchmark
+        excess_returns = (1 + returns_array) / (1 + benchmark_returns) - 1
+
+        # Usa il rendimento medio del benchmark come risk-free rate
+        risk_free_rate = np.mean(benchmark_returns)
+    else:
+        # Se non è fornito un benchmark, usa i rendimenti originali e risk-free rate = 0
+        excess_returns = returns_array
+        risk_free_rate = 0
+
+    # Calcolo della downside deviation rispetto al risk-free rate
+    negative_returns = np.minimum(excess_returns - risk_free_rate, 0)
+    downside_deviation = np.sqrt(np.mean(negative_returns ** 2))
 
     # Calcolo del Sortino Ratio
     if downside_deviation == 0:
         return np.nan  # Evita divisione per zero, restituisce NaN
-    sortino_ratio = np.mean(excess_returns) / downside_deviation
 
+    sortino_ratio = (np.mean(returns_array) - risk_free_rate) / downside_deviation
     return sortino_ratio
 
-def Treynor_Ratio(returns, market_returns, risk_free_rate=0):
-    """
-        Calcola il Treynor Ratio.
 
-        Parameters:
-        returns (array-like): Array o lista dei rendimenti del portafoglio o dell'investimento.
-        market_returns (array-like): Array o lista dei rendimenti del mercato di riferimento.
-        risk_free_rate (float): Tasso di rendimento privo di rischio. Default è 0.
-
-        Returns:
-        float: Il Treynor Ratio.
-        """
-    # Calcolo del rendimento medio del portafoglio e del mercato
-    portfolio_return = np.mean(returns)
-    market_return = np.mean(market_returns)
-
-    # Calcolo del beta (coefficiente di regressione tra rendimenti del portafoglio e del mercato)
-    covariance = np.cov(returns, market_returns)[0, 1]
-    variance_market = np.var(market_returns)
-    beta = covariance / variance_market
-
-    # Calcolo del Treynor Ratio
-    treynor_ratio = (portfolio_return - risk_free_rate) / beta
-
-    return treynor_ratio
+def calmar_ratio(returns, maxDD):
+    average_return = sum(returns)/len(returns)
+    return average_return/(-maxDD)
 
 def Profit_Factor(trades):
     """
@@ -115,46 +113,8 @@ def Profit_Factor(trades):
 
     return profit_factor
 
-def Volatility(returns):
-    """
-        Calcola la volatilità di una strategia di trading.
-
-        Parameters:
-        returns (array-like): Lista o array dei rendimenti della strategia.
-
-        Returns:
-        float: La volatilità (deviazione standard) dei rendimenti.
-        """
-    # Calcolo della volatilità
-    volatility = np.std(returns, ddof=1)  # ddof=1 per calcolare la deviazione standard campionaria
-
-    return volatility
-
 def Max_Drawdown(Historycal_Drawdowns):
     return max(Historycal_Drawdowns)
-
-def Omega_Ratio(returns, threshold):
-    """
-    Calcola l'Omega Ratio.
-
-    Parameters:
-    returns (array-like): Lista o array dei rendimenti della strategia.
-    threshold (float): La soglia di rendimento minimo accettabile (MAR).
-
-    Returns:
-    float: L'Omega Ratio.
-    """
-    # Calcolo delle parti superiore e inferiore della formula dell'Omega Ratio
-    positive_part = np.sum(np.maximum(returns - threshold, 0))
-    negative_part = np.sum(np.maximum(threshold - returns, 0))
-
-    if negative_part == 0:
-        return float('inf')  # Evita divisione per zero, restituisce infinito
-
-    # Calcolo dell'Omega Ratio
-    omega_ratio = positive_part / negative_part
-
-    return omega_ratio
 
     # Select the colors of the chart
 def Color(negclr, posclr, element, minimum):
@@ -186,12 +146,12 @@ st.markdown(f"""
     }}
     </style>
     """, unsafe_allow_html=True)
-def Text(text):
-    st.write(f"<p style='color: {text_color};'>" + text + "</p>", unsafe_allow_html=True)
-def Text2(text):
-    st.markdown(f"<h2 style='color: {text_color};'>{text}</h2>", unsafe_allow_html=True)
-def Text3(text):
-    st.markdown(f"<h1 style='color: {text_color};'>{text}</h1>", unsafe_allow_html=True)
+def Text(text, color=text_color):
+    st.write(f"<p style='color: {color};'>" + text + "</p>", unsafe_allow_html=True)
+def Text2(text, color=text_color):
+    st.markdown(f"<h2 style='color: {color};'>{text}</h2>", unsafe_allow_html=True)
+def Text3(text, color=text_color):
+    st.markdown(f"<h1 style='color: {color};'>{text}</h1>", unsafe_allow_html=True)
 
 def credits():
     # Some information about me
@@ -872,6 +832,7 @@ def Simple_strategy():
     Sortin = []
     DD = []
     MaxDD = []
+    calmar = []
     NomiMesi2 = ["01-Jan", "02-Feb", "03-Mar", "04-Apr", "05-May", "06-JuN", "07-JuL", "08-Aug", "09-Sept",
                  "10-Oct",
                  "11-Nov",
@@ -985,6 +946,11 @@ def Simple_strategy():
                 array.append(result)
         return array
 
+    Bool_Benchmark = st.radio("Calculations of the parameters: ", ("With Benchmark", "Without Benchmark"))
+    if Bool_Benchmark == "With Benchmark":
+        Name_Benchmark = st.text_input("Name of the Asset\'s benchmark?", value='^GSPC')
+    else:
+        Name_Benchmark = ''
     if 'data_calculated' not in st.session_state:
         st.session_state.data_calculated = False
     if 'MesiComplessivi' not in st.session_state:
@@ -1005,6 +971,8 @@ def Simple_strategy():
         st.session_state.MaxDD = []
     if 'DD' not in st.session_state:
         st.session_state.DD = []
+    if 'calmar' not in st.session_state:
+        st.session_state.calmar = []
 
     if st.button('Ready to go!'):
         st.session_state.MesiComplessivi = []
@@ -1016,6 +984,7 @@ def Simple_strategy():
         st.session_state.DD = []
         st.session_state.Negative = []
         st.session_state.Positive = []
+        st.session_state.calmar = []
 
         for i in range(1, 13):
             if (Months == True) or (NomiMesi1[i - 1] in options):
@@ -1026,97 +995,119 @@ def Simple_strategy():
                 drawdowns = drawdown(Low(i, AnnoPartenza, AnnoFine), Mese)
                 st.session_state.DD.append(drawdowns)
                 st.session_state.Trades.append(round(Profit_Factor(Mese), 2))
-                st.session_state.Sortin.append(round(Sortino_Ratio(Mese), 2))
+                st.session_state.Sortin.append(round(Sortino_Ratio_Benchmark(Mese, benchmark_ticker=Name_Benchmark), 2))
                 st.session_state.MaxDD.append(round(min(drawdowns), 2))
                 st.session_state.Positive.append([High(i, AnnoPartenza, AnnoFine)])
                 st.session_state.Negative.append([Low(i, AnnoPartenza, AnnoFine)])
+                st.session_state.calmar.append(round(calmar_ratio(Mese, min(drawdowns)),2))
 
         st.session_state.data_calculated = True
 
-    # DATABASE
-    representation_database = st.selectbox("Database Representation Method: ",
-                                           ("User Friendly", "For CSV download"))
-
-    if representation_database == "For CSV download":
-        def format_value(val):
-            return f"{'+' if val > 0 else ''}{val:.2f}%"
-
-        Results = pd.DataFrame({
-            "Month": st.session_state.Months_to_consider,
-            "Average Win Rate": [format_value(x) for x in st.session_state.WRComplessivi],
-            "Average Monthly Return": [format_value(x) for x in st.session_state.MesiComplessivi],
-            "Max Drawdown": [x for x in st.session_state.MaxDD],
-            "Profit Factor": [x for x in st.session_state.Trades],
-            "Sortino Ratio": [x for x in st.session_state.Sortin]
-        })
-        st.dataframe(Results, hide_index=True)
-    else:
-
-        def format_value(val, include_sign=True, include_percent=True):
-            if isinstance(val, str):
-                return val
-            sign = '+' if val > 0 and include_sign else ''
-            percent = '%' if include_percent else ''
-            return f"{sign}{val:.2f}{percent}"
-
-        def style_cell(val, color):
-            return f'color: {color}; font-weight: bold; text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;'
-
-        def color_win_rate(val):
-            val = float(val.strip('%').strip('+'))
-            return style_cell(val, 'red' if val < 50 else 'blue')
-
-        def color_monthly_return(val):
-            val = float(val.strip('%').strip('+'))
-            return style_cell(val, 'red' if val < 0 else 'blue')
-
-        def color_max_drawdown(val):
-            val = float(val.strip('%').strip('+'))
-            return style_cell(val, color)
-
-        def color_profit_factor(val):
-            val = float(val)
-            return style_cell(val, 'red' if val < 1 else 'blue')
-
-        # Pandas dataframe creation
-        table1 = pd.DataFrame({
-            "Month": st.session_state.Months_to_consider,
-            "Average Win Rate": [format_value(x) for x in st.session_state.WRComplessivi],
-            "Average Monthly Return": [format_value(x) for x in st.session_state.MesiComplessivi],
-            "Max Drawdown": [format_value(x) for x in st.session_state.MaxDD],
-            "Profit Factor": [format_value(x, include_percent=False) for x in st.session_state.Trades],
-            "Sortino Ratio": [format_value(x, include_percent=False) for x in st.session_state.Sortin]
-        })
-
-        # Calculate mean and standard deviation for Max Drawdown
-        max_drawdown_values = [float(x.strip('%').strip('+')) for x in table1["Max Drawdown"]]
-
-        # Other representation "simpler"
-        mean_drawdown = np.mean(max_drawdown_values)
-        std_drawdown = np.std(max_drawdown_values)
-
-        def color_max_drawdown(val):
-            val = float(val.strip('%').strip('+'))
-            if val < mean_drawdown - std_drawdown:
-                color = 'red'
-            elif val > mean_drawdown + std_drawdown:
-                color = 'blue'
-            else:
-                color = 'black'
-            return style_cell(val, color)
-
-        # Apply styles
-        styled_table = table1.style.applymap(color_win_rate, subset=['Average Win Rate']) \
-            .applymap(color_monthly_return, subset=['Average Monthly Return']) \
-            .applymap(color_max_drawdown, subset=['Max Drawdown']) \
-            .applymap(color_profit_factor, subset=['Profit Factor', 'Sortino Ratio']) \
-            .applymap(lambda x: style_cell(x, 'black'), subset=['Month'])
-
-        # Display the styled table
-        st.write(styled_table.to_html(escape=False), unsafe_allow_html=True)
-
-    # CHARTS
+    # DATAFRAME + CHARTS
     if st.session_state.data_calculated:
+        # DATABASE
+        representation_database = st.selectbox("Database Representation Method: ",
+                                               ("User Friendly", "For CSV download"))
+
+        if representation_database == "For CSV download":
+            def format_value(val):
+                return f"{'+' if val > 0 else ''}{val:.2f}%"
+
+            Results = pd.DataFrame({
+                "Month": st.session_state.Months_to_consider,
+                "Average Win Rate": [format_value(x) for x in st.session_state.WRComplessivi],
+                "Average Monthly Return": [format_value(x) for x in st.session_state.MesiComplessivi],
+                "Max Drawdown": [x for x in st.session_state.MaxDD],
+                "Profit Factor": [x for x in st.session_state.Trades],
+                "Sortino Ratio": [x for x in st.session_state.Sortin],
+                "Calmar Ratio": [x for x in st.session_state.calmar]
+            })
+            st.dataframe(Results, hide_index=True)
+        else:
+
+            def format_value(val, include_sign=True, include_percent=True):
+                if isinstance(val, str):
+                    return val
+                sign = '+' if val > 0 and include_sign else ''
+                percent = '%' if include_percent else ''
+                return f"{sign}{val:.2f}{percent}"
+
+            def style_cell(val, color):
+                return f'color: {color}; font-weight: bold; text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;'
+
+            def color_win_rate(val):
+                val = float(val.strip('%').strip('+'))
+                return style_cell(val, 'red' if val < 50 else 'blue')
+
+            def color_monthly_return(val):
+                val = float(val.strip('%').strip('+'))
+                return style_cell(val, 'red' if val < 0 else 'blue')
+
+            def color_max_drawdown(val):
+                val = float(val.strip('%').strip('+'))
+                return style_cell(val, color)
+
+            def color_profit_factor(val):
+                val = float(val)
+                return style_cell(val, 'red' if val < 1 else 'blue')
+
+            # Pandas dataframe creation
+            table1 = pd.DataFrame({
+                "Month": st.session_state.Months_to_consider,
+                "Average Win Rate": [format_value(x) for x in st.session_state.WRComplessivi],
+                "Average Monthly Return": [format_value(x) for x in st.session_state.MesiComplessivi],
+                "Max Drawdown": [format_value(x) for x in st.session_state.MaxDD],
+                "Profit Factor": [format_value(x, include_percent=False) for x in st.session_state.Trades],
+                "Sortino Ratio": [format_value(x, include_percent=False) for x in st.session_state.Sortin],
+                "Calmar Ratio": [format_value(x, include_percent=False) for x in st.session_state.calmar]
+            })
+
+            # Calculate mean and standard deviation for Max Drawdown
+            max_drawdown_values = [float(x.strip('%').strip('+')) for x in table1["Max Drawdown"]]
+
+            # Other representation "simpler"
+            mean_drawdown = np.mean(max_drawdown_values)
+            std_drawdown = np.std(max_drawdown_values)
+
+            def color_max_drawdown(val):
+                val = float(val.strip('%').strip('+'))
+                if val < mean_drawdown - std_drawdown:
+                    color = 'red'
+                elif val > mean_drawdown + std_drawdown:
+                    color = 'blue'
+                else:
+                    color = 'black'
+                return style_cell(val, color)
+
+            # Calculate mean and standard deviation for Calmar
+            calmar_values = [float(x.strip('%').strip('+')) for x in table1["Calmar Ratio"]]
+
+            # Other representation "simpler"
+            mean_calmar = np.mean(calmar_values)
+            std_calmar = np.std(calmar_values)
+
+            def color_calmar(val):
+                val = float(val.strip('%').strip('+'))
+                if val < mean_calmar - std_calmar:
+                    color = 'red'
+                elif val > mean_calmar + std_calmar:
+                    color = 'blue'
+                else:
+                    color = 'black'
+                return style_cell(val, color)
+
+            # Apply styles
+            styled_table = table1.style.applymap(color_win_rate, subset=['Average Win Rate']) \
+                .applymap(color_monthly_return, subset=['Average Monthly Return']) \
+                .applymap(color_max_drawdown, subset=['Max Drawdown']) \
+                .applymap(color_calmar, subset=['Calmar Ratio']) \
+                .applymap(color_profit_factor, subset=['Profit Factor', 'Sortino Ratio']) \
+                .applymap(lambda x: style_cell(x, 'black'), subset=['Month'])
+
+            # Display the styled table
+            st.write(styled_table.to_html(escape=False), unsafe_allow_html=True)
+
+        # CHART
         rep = st.selectbox("Representation method: ", ("Image", "Interactive"))
 
         if rep == "Image":
@@ -1362,6 +1353,22 @@ def Home():
 
     Text3("Craft Winning Strategies:")
     Text("Develop and test simple yet effective market entry and exit strategies. Choose a specific month to enter the market and another to exit, then evaluate the potential success of your strategy with a range of performance indicators. See how your strategy would have performed historically, and gain confidence in your trading decisions.")
+    # Button print
+    col1, col2, col3 = st.columns(3)
+
+    with col2:
+        if st.button("Go to 'Strategy' page", key="strategy_button"):
+            go_to_basic_strategy()
+    # Centered photo
+    st.markdown(
+        f"""
+            <div style="text-align: center;">
+                <img src="{url_strategy2}" alt="Image" style="width: 300px;">
+                <p style="font-size: 16px; color: white;">Example with 'GOOG' stock</p>
+            </div>
+            """,
+        unsafe_allow_html=True
+    )
     st.divider()
 
     Text3("In-Sample and Out-of-Sample Analysis:")
@@ -1484,11 +1491,12 @@ def nav_buttons():
 
 
 def sidebar_nav():
-    st.sidebar.title("Web App Pages")
+    with st.sidebar:
+        Text3("Web App Pages", color="fff")
     counter = 0
-    Links = [[url_analysis, 50], [url_analysis, 50], [url_analysis, 50], ["https://i.postimg.cc/7LynpkrL/Whats-App-Image-2024-07-27-at-16-36-44.jpg", 30]]
+    Links = [[url_analysis, 50], [url_analysis, 50], [url_strategy, 60], ["https://i.postimg.cc/7LynpkrL/Whats-App-Image-2024-07-27-at-16-36-44.jpg", 30]]
     for page, description in pagine.items():
-        # Contenitore principale con flexbox
+        # Container for flexbox
         with st.sidebar.container():
             st.markdown("""
             <div class="flex-container">
@@ -1523,12 +1531,11 @@ def sidebar_nav():
 
             <p class="white-text">{description}</p>
             """, unsafe_allow_html=True)
-
-# Inizializzazione della variabile di stato per la selezione della pagina
+# State bar inizialization
 if 'selezione_pagina' not in st.session_state:
     st.session_state.selezione_pagina = "Home"
 
-# Applica il CSS personalizzato
+# Custom CSS
 apply_custom_css(sidebar_color, main_bg_color, text_color, widget_color, header_color)
 
 # Sidebar navigation
@@ -1537,10 +1544,9 @@ sidebar_nav()
 # Main content
 if st.session_state.selezione_pagina == "Home":
     Home()
+    st.divider()
     st.write("## Navigate to other pages:")
     nav_buttons()
-#    if st.button("Create your basic strategy!"):
-#        go_to_basic_strategy()
 
 elif st.session_state.selezione_pagina == "Analysis":
     main_page()
