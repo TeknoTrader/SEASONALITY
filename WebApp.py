@@ -1886,7 +1886,7 @@ def Home():
         Text("Start with analyzing market data")
         st.link_button("Analysis", "https://seasonalityanalysis.streamlit.app/~/+/#analyze-market-behavior")
     with col3:
-        Text("How to use this web app")
+        Text("How to use this web app corretly")
         st.link_button("Can it be good?", "ghttps://seasonalityanalysis.streamlit.app/~/+/#how-you-can-use-this-web-application")
     with col4:
         Text("To keep in consideration while using the web app")
