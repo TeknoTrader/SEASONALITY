@@ -28,6 +28,7 @@ label_color = "#FFFFFF"
 url_analysis = "https://i.postimg.cc/5yFWvkJV/Analysis-screen.png"
 url_strategy = "https://i.postimg.cc/ncT1PhkP/screen-contorno.png"
 url_strategy2 = "https://i.postimg.cc/WbYzhB8y/strategy-red.png"
+url_home = "https://i.postimg.cc/Bnm5nhLQ/screen-home-con-contorno.png"
 
 # DA MODIFICARE LA SIDEBAR
 def WinRate(Arr):
@@ -2080,7 +2081,7 @@ def sidebar_nav():
     with st.sidebar:
         Text3("Web App Pages", color="fff")
     counter = 0
-    Links = [[url_analysis, 50], [url_analysis, 50], [url_strategy, 60], ["https://i.postimg.cc/7LynpkrL/Whats-App-Image-2024-07-27-at-16-36-44.jpg", 30]]
+    Links = [[url_home, 50], [url_analysis, 50], [url_strategy, 60], ["https://i.postimg.cc/7LynpkrL/Whats-App-Image-2024-07-27-at-16-36-44.jpg", 30]]
     for page, description in pagine.items():
         # Container for flexbox
         with st.sidebar.container():
