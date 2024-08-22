@@ -2079,7 +2079,7 @@ def nav_buttons():
 
 def sidebar_nav():
     with st.sidebar:
-        Text3("Web App Pages", color="ffffff")
+        Text3("Web App Pages", color="#880C14")
     counter = 0
     Links = [[url_home, 50], [url_analysis, 50], [url_strategy, 60], ["https://i.postimg.cc/7LynpkrL/Whats-App-Image-2024-07-27-at-16-36-44.jpg", 30]]
     for page, description in pagine.items():
