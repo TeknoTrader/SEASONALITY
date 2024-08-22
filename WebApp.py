@@ -2147,7 +2147,6 @@ elif st.session_state.selezione_pagina == "Basic Strategy":
     nav_buttons()
 
 elif st.session_state.selezione_pagina == "Credits":
-    Advanced_Strategy()
     credits()
     st.write("## Navigate to other pages:")
     nav_buttons()
