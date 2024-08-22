@@ -22,7 +22,6 @@ main_bg_color = "#649ABA"
 text_color = "#1A4054"
 widget_color = "#ffffff"
 header_color = "#880C14"
-#text_color = "#FFFFFF"
 label_color = "#FFFFFF"
 
 # Photos
@@ -31,7 +30,6 @@ url_strategy = "https://i.postimg.cc/ncT1PhkP/screen-contorno.png"
 url_strategy2 = "https://i.postimg.cc/WbYzhB8y/strategy-red.png"
 
 # DA MODIFICARE LA SIDEBAR
-
 def WinRate(Arr):
     tot = 0
     for i in Arr:
@@ -89,15 +87,6 @@ def calmar_ratio(returns, maxDD):
     return average_return/(-maxDD)
 
 def Profit_Factor(trades):
-    """
-        Calcola il Profit Factor.
-
-        Parameters:
-        trades (array-like): Lista dei profitti e delle perdite per ogni operazione.
-
-        Returns:
-        float: Il Profit Factor.
-        """
     # Separare le operazioni vincenti e perdenti
     profits = [trade for trade in trades if trade > 0]
     losses = [-trade for trade in trades if trade < 0]
@@ -946,7 +935,7 @@ def Simple_strategy():
                 array.append(result)
         return array
 
-    Bool_Benchmark = st.radio("Calculations of the parameters: ", ("With Benchmark", "Without Benchmark"))
+    Bool_Benchmark = st.radio("Calculations of the \"Sortino Ratio\": ", ("With Benchmark", "Without Benchmark"))
     if Bool_Benchmark == "With Benchmark":
         Name_Benchmark = st.text_input("Name of the Asset\'s benchmark?", value='^GSPC')
     else:
@@ -1292,6 +1281,575 @@ def Simple_strategy():
     else:
         st.write("Please click 'Ready to go!' to calculate and display the data.")
 
+
+def Advanced_Strategy():
+        AnnoPartenz = st.number_input("Starting year 📅: ", min_value=1850, max_value=current_year - 1, step=1)
+
+        AnnoFin = st.number_input("End year 📅: ", value=current_year, min_value=1900, max_value=current_year, step=1)
+
+        # First validation check
+        if AnnoFin <= AnnoPartenz:
+            st.warning(
+                "# ⚠️ ATTENTION!!!\n### The starting year (" + str(
+                    AnnoPartenz) + ") mustn't be higher than the end year (" + str(AnnoFin) + ").")
+            st.write("### Please, select another ending date for the relevation.")
+            sys.exit(1)
+
+        ticker = st.text_input("Insert the TICKER 📈: ", value="GOOG")
+
+        # Verify the ticker
+        try:
+            asset = yf.Ticker(ticker)
+            info = asset.info
+            info.get('longName', 'N/A')
+            if info and "error" in info:
+                st.warning(f"# ⚠️ The asset {ticker} doesn't exist.")
+                st.write(
+                    "### Maybe you didn't select the right ticker.\n### You can find here the [Yahoo finance ticker's list](url)")
+                sys.exit(1)
+        except Exception as e:
+            st.warning(f"# ⚠️ Error with the asset {ticker}.")
+            st.write(
+                "### Probably you didn't insert the right ticker.\n### You can find here the [Yahoo finance ticker's list](url)\n")
+            st.write(f"Fing here more details: \n{str(e)}")
+            sys.exit(1)
+
+        asset = yf.Ticker(ticker)
+        info = asset.info
+        asset_name = info.get('longName', 'N/A')
+
+        AnnoFine = int(AnnoFin)
+        end = date(AnnoFine, 1, 1)
+        Text(f"\nEnd of the relevation: {end}")
+        year = 0
+        try:
+            data = yf.download(ticker)
+            if not data.empty:
+                # Find the first data avaible, to avoid errors
+                first_date = data.index[0]
+                Text(f"Data of  {ticker} avaible from: {first_date.date()}")
+                year = int(first_date.strftime('%Y'))
+            else:
+                st.warning(f"# ⚠️ The asset {ticker} doesn't exist.")
+                st.write(
+                    "### Maybe you didn't select the right ticker.\n### You can find here the [Yahoo finance ticker's list](url)")
+                sys.exit(1)
+        except Exception as e:
+            # Se non ci sono dati disponibili, fornire un messaggio personalizzato
+            st.warning(f"# ⚠️ The asset {ticker} doesn't exist.")
+            st.write(
+                "### Maybe you didn't select the right ticker.\n### You can find here the [Yahoo finance ticker's list](url)")
+            sys.exit(1)
+
+        # Controls to do: there must be no invalid periods of time
+
+        # 1)The starting year must be superior than the first date avaible in the database
+        if year >= AnnoFine:
+            st.warning("# ⚠️ ATTENTION!!!\n### You have to choose a data that is ABOVE ", year)
+            sys.exit(1)
+
+        end = date(AnnoFine, 1, 1)
+        Text(f"\nEnd year at: {end}")
+
+        if year < AnnoPartenz:
+            AnnoPartenza = AnnoPartenz
+        else:
+            AnnoPartenza = year + 1
+
+        # Inizialization
+        Annate1 = list(range(AnnoPartenza, AnnoFine))
+        NomiMesi = list(range(1, 13))
+        number_emojis = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟", "1️⃣1️⃣",
+                         "1️⃣2️⃣"]  # There is no unicode for 2 decimals numbers
+
+        Annate = []  # Conversion of Annate1 's elements in string type
+        for i in Annate1:
+            Annate.append(str(i))
+
+        inizio = date(AnnoPartenza, 1, 1)
+        # Now we download the serious data
+        Text(f"\nStarting calculations from: {inizio}")
+
+        df = yf.download(ticker, start=inizio, end=end, interval="1mo")
+
+        df = pd.DataFrame(df["Open"])  # Riduciamo l'array alle sole aperture
+
+        array = []
+
+        # We start to create the list to keep in consideration
+        WRComplessivi = []
+        MesiComplessivi = []
+        Months_to_consider = []
+        trades = []
+        Sortin = []
+        DD = []
+        MaxDD = []
+        calmar = []
+        NomiMesi2 = ["01-Jan", "02-Feb", "03-Mar", "04-Apr", "05-May", "06-JuN", "07-JuL", "08-Aug", "09-Sept",
+                     "10-Oct",
+                     "11-Nov",
+                     "12-Dec"]  # Abbreviated month's name
+
+        # ------------------------------------------------------
+        # ------------------------------------------------------
+        # We are going to:
+        #  1)Visualize the results of the 12 months of the year
+        #  2)Create an array that contains the data to analyze how does the varius seasons of the year performs
+        # ------------------------------------------------------
+        # LET'S START WITH THE POINT 1!!!
+        # ------------------------------------------------------
+        # ------------------------------------------------------
+
+        W = 400  # Chart
+        H = 400  # Chart Height
+
+        Text3("LET'S SEE THE RESULTS 📈")
+        Months = st.radio("Output selection:",
+                          ("Choose manually the months", "Represent every month"))  # st.toggle("Represent all months")
+
+        first_representation_model = "Not longer"
+        if (Months == "Choose manually the months"):  # == False):
+            if (first_representation_model == "Longer"):
+                # Create a dictionary to store the state of each toggle
+                if 'month_toggles' not in st.session_state:
+                    st.session_state.month_toggles = {month: False for month in NomiMesi1}
+
+                # Use columns to organize the toggles
+                cols = st.columns(3)  # You can adjust the number of columns as needed
+
+                # Create toggles for each month
+                for index, month in enumerate(NomiMesi1):
+                    with cols[index % 3]:  # This will distribute the toggles across the columns
+                        st.session_state.month_toggles[month] = st.toggle(month, st.session_state.month_toggles[month])
+            else:
+                options = st.multiselect(
+                    "# Select the months to consider",
+                    NomiMesi1
+                )
+        else:
+            options = NomiMesi1
+
+        def Mensilit(mese, startY, endY):
+            array = []
+            for i in range(startY, endY):
+                if (mese != 12):  # Se è dicembre, il mese successivo è gennaio quindi si sta attenti
+                    strt = date(i, mese, 1)
+                    end = date(i, mese + 1, 1)
+                    dff = yf.download(ticker, start=strt, end=end, interval="1mo")
+                    dffc = pd.DataFrame(dff["Close"])
+                    dffo = pd.DataFrame(dff["Open"])
+                    resultAbs = dffc.iat[0, 0] - dffo.iat[0, 0]  # Nominal return
+                    result = resultAbs * 100 / dffo.iat[0, 0]  # In percentage
+                    array.append(result)
+                else:
+                    strt = date(i, mese, 1)
+                    end = date(i + 1, 1, 1)
+                    dff = yf.download(ticker, start=strt, end=end, interval="1mo")
+                    dffc = pd.DataFrame(dff["Close"])
+                    dffo = pd.DataFrame(dff["Open"])
+                    resultAbs = dffc.iat[0, 0] - dffo.iat[0, 0]  # Nominal return
+                    result = resultAbs * 100 / dffo.iat[0, 0]  # In percentage
+                    array.append(result)
+            return array
+
+        def High(mese, startY, endY):
+            array = []
+            for i in range(startY, endY):
+                if (mese != 12):  # Se è dicembre, il mese successivo è gennaio quindi si sta attenti
+                    strt = date(i, mese, 1)
+                    end = date(i, mese + 1, 1)
+                    dff = yf.download(ticker, start=strt, end=end, interval="1mo")
+                    dffc = pd.DataFrame(dff["High"])
+                    dffo = pd.DataFrame(dff["Open"])
+                    resultAbs = dffc.iat[0, 0] - dffo.iat[0, 0]  # Nominal return
+                    result = resultAbs * 100 / dffo.iat[0, 0]  # In percentage
+                    array.append(result)
+                else:
+                    strt = date(i, mese, 1)
+                    end = date(i + 1, 1, 1)
+                    dff = yf.download(ticker, start=strt, end=end, interval="1mo")
+                    dffc = pd.DataFrame(dff["High"])
+                    dffo = pd.DataFrame(dff["Open"])
+                    resultAbs = dffc.iat[0, 0] - dffo.iat[0, 0]  # Nominal return
+                    result = resultAbs * 100 / dffo.iat[0, 0]  # In percentage
+                    array.append(result)
+            return array
+
+        def Low(mese, startY, endY):
+            array = []
+            for i in range(startY, endY):
+                if (mese != 12):  # Se è dicembre, il mese successivo è gennaio quindi si sta attenti
+                    strt = date(i, mese, 1)
+                    end = date(i, mese + 1, 1)
+                    dff = yf.download(ticker, start=strt, end=end, interval="1mo")
+                    dffc = pd.DataFrame(dff["Low"])
+                    dffo = pd.DataFrame(dff["Open"])
+                    resultAbs = dffc.iat[0, 0] - dffo.iat[0, 0]  # Nominal return
+                    result = resultAbs * 100 / dffo.iat[0, 0]  # In percentage
+                    array.append(result)
+                else:
+                    strt = date(i, mese, 1)
+                    end = date(i + 1, 1, 1)
+                    dff = yf.download(ticker, start=strt, end=end, interval="1mo")
+                    dffc = pd.DataFrame(dff["Low"])
+                    dffo = pd.DataFrame(dff["Open"])
+                    resultAbs = dffc.iat[0, 0] - dffo.iat[0, 0]  # Nominal return
+                    result = resultAbs * 100 / dffo.iat[0, 0]  # In percentage
+                    array.append(result)
+            return array
+
+        Bool_Benchmark = st.radio("Calculations of the parameters: ", ("With Benchmark", "Without Benchmark"))
+        if Bool_Benchmark == "With Benchmark":
+            Name_Benchmark = st.text_input("Name of the Asset\'s benchmark?", value='^GSPC')
+        else:
+            Name_Benchmark = ''
+        if 'data_calculated' not in st.session_state:
+            st.session_state.data_calculated = False
+        if 'MesiComplessivi' not in st.session_state:
+            st.session_state.MesiComplessivi = []
+        if 'WRComplessivi' not in st.session_state:
+            st.session_state.WRComplessivi = []
+        if 'Months_to_consider' not in st.session_state:
+            st.session_state.Months_to_consider = []
+        if 'Trades' not in st.session_state:
+            st.session_state.Trades = []
+        if 'Negative' not in st.session_state:
+            st.session_state.Negative = []
+        if 'Positive' not in st.session_state:
+            st.session_state.Positive = []
+        if 'Sortin' not in st.session_state:
+            st.session_state.Sortin = []
+        if 'MaxDD' not in st.session_state:
+            st.session_state.MaxDD = []
+        if 'DD' not in st.session_state:
+            st.session_state.DD = []
+        if 'calmar' not in st.session_state:
+            st.session_state.calmar = []
+
+        if st.button('Ready to go!'):
+            st.session_state.MesiComplessivi = []
+            st.session_state.WRComplessivi = []
+            st.session_state.Months_to_consider = []
+            st.session_state.Trades = []
+            st.session_state.Sortin = []
+            st.session_state.MaxDD = []
+            st.session_state.DD = []
+            st.session_state.Negative = []
+            st.session_state.Positive = []
+            st.session_state.calmar = []
+
+            for year in range(AnnoPartenza, AnnoFine):
+                Year = [] # Return of the overall year
+                for i in range(1, 13):
+                    Trades = [] # Trades of this year AND the month
+                    if (Months == True) or (NomiMesi1[i - 1] in options):
+                        Trades.append([Mensilit(i, year, year), i])
+
+                Mese = Mensilit(i, AnnoPartenza, AnnoFine)
+                st.session_state.MesiComplessivi.append(round(np.mean(Mese), 2))
+                st.session_state.WRComplessivi.append(round(WinRate(Mese), 2))
+                st.session_state.Months_to_consider.append(NomiMesi2[i - 1])
+                drawdowns = drawdown(Low(i, AnnoPartenza, AnnoFine), Mese)
+                st.session_state.DD.append(drawdowns)
+                st.session_state.Trades.append(round(Profit_Factor(Mese), 2))
+                st.session_state.Sortin.append(
+                    round(Sortino_Ratio_Benchmark(Mese, benchmark_ticker=Name_Benchmark), 2))
+                st.session_state.MaxDD.append(round(min(drawdowns), 2))
+                st.session_state.Positive.append([High(i, AnnoPartenza, AnnoFine)])
+                st.session_state.Negative.append([Low(i, AnnoPartenza, AnnoFine)])
+                st.session_state.calmar.append(round(calmar_ratio(Mese, min(drawdowns)), 2))
+            st.session_state.data_calculated = True
+
+        # DATAFRAME + CHARTS
+        if st.session_state.data_calculated:
+            # DATABASE
+            representation_database = st.selectbox("Database Representation Method: ",
+                                                   ("User Friendly", "For CSV download"))
+
+            if representation_database == "For CSV download":
+                def format_value(val):
+                    return f"{'+' if val > 0 else ''}{val:.2f}%"
+
+                Results = pd.DataFrame({
+                    "Month": st.session_state.Months_to_consider,
+                    "Average Win Rate": [format_value(x) for x in st.session_state.WRComplessivi],
+                    "Average Monthly Return": [format_value(x) for x in st.session_state.MesiComplessivi],
+                    "Max Drawdown": [x for x in st.session_state.MaxDD],
+                    "Profit Factor": [x for x in st.session_state.Trades],
+                    "Sortino Ratio": [x for x in st.session_state.Sortin],
+                    "Calmar Ratio": [x for x in st.session_state.calmar]
+                })
+                st.dataframe(Results, hide_index=True)
+            else:
+
+                def format_value(val, include_sign=True, include_percent=True):
+                    if isinstance(val, str):
+                        return val
+                    sign = '+' if val > 0 and include_sign else ''
+                    percent = '%' if include_percent else ''
+                    return f"{sign}{val:.2f}{percent}"
+
+                def style_cell(val, color):
+                    return f'color: {color}; font-weight: bold; text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;'
+
+                def color_win_rate(val):
+                    val = float(val.strip('%').strip('+'))
+                    return style_cell(val, 'red' if val < 50 else 'blue')
+
+                def color_monthly_return(val):
+                    val = float(val.strip('%').strip('+'))
+                    return style_cell(val, 'red' if val < 0 else 'blue')
+
+                def color_max_drawdown(val):
+                    val = float(val.strip('%').strip('+'))
+                    return style_cell(val, color)
+
+                def color_profit_factor(val):
+                    val = float(val)
+                    return style_cell(val, 'red' if val < 1 else 'blue')
+
+                # Pandas dataframe creation
+                table1 = pd.DataFrame({
+                    "Month": st.session_state.Months_to_consider,
+                    "Average Win Rate": [format_value(x) for x in st.session_state.WRComplessivi],
+                    "Average Monthly Return": [format_value(x) for x in st.session_state.MesiComplessivi],
+                    "Max Drawdown": [format_value(x) for x in st.session_state.MaxDD],
+                    "Profit Factor": [format_value(x, include_percent=False) for x in st.session_state.Trades],
+                    "Sortino Ratio": [format_value(x, include_percent=False) for x in st.session_state.Sortin],
+                    "Calmar Ratio": [format_value(x, include_percent=False) for x in st.session_state.calmar]
+                })
+
+                # Calculate mean and standard deviation for Max Drawdown
+                max_drawdown_values = [float(x.strip('%').strip('+')) for x in table1["Max Drawdown"]]
+
+                # Other representation "simpler"
+                mean_drawdown = np.mean(max_drawdown_values)
+                std_drawdown = np.std(max_drawdown_values)
+
+                def color_max_drawdown(val):
+                    val = float(val.strip('%').strip('+'))
+                    if val < mean_drawdown - std_drawdown:
+                        color = 'red'
+                    elif val > mean_drawdown + std_drawdown:
+                        color = 'blue'
+                    else:
+                        color = 'black'
+                    return style_cell(val, color)
+
+                # Calculate mean and standard deviation for Calmar
+                calmar_values = [float(x.strip('%').strip('+')) for x in table1["Calmar Ratio"]]
+
+                # Other representation "simpler"
+                mean_calmar = np.mean(calmar_values)
+                std_calmar = np.std(calmar_values)
+
+                def color_calmar(val):
+                    val = float(val.strip('%').strip('+'))
+                    if val < mean_calmar - std_calmar:
+                        color = 'red'
+                    elif val > mean_calmar + std_calmar:
+                        color = 'blue'
+                    else:
+                        color = 'black'
+                    return style_cell(val, color)
+
+                # Apply styles
+                styled_table = table1.style.applymap(color_win_rate, subset=['Average Win Rate']) \
+                    .applymap(color_monthly_return, subset=['Average Monthly Return']) \
+                    .applymap(color_max_drawdown, subset=['Max Drawdown']) \
+                    .applymap(color_calmar, subset=['Calmar Ratio']) \
+                    .applymap(color_profit_factor, subset=['Profit Factor', 'Sortino Ratio']) \
+                    .applymap(lambda x: style_cell(x, 'black'), subset=['Month'])
+
+                # Display the styled table
+                st.write(styled_table.to_html(escape=False), unsafe_allow_html=True)
+
+            # CHART
+            rep = st.selectbox("Representation method: ", ("Image", "Interactive"))
+
+            if rep == "Image":
+                st.write("⚠️OVERALL AVERAGE RETURN MONTHS:")
+                data = dict(
+                    zip(np.array(st.session_state.Months_to_consider), np.array(st.session_state.MesiComplessivi)))
+                df = pd.DataFrame(list(data.items()), columns=['Months', 'Returns'])
+
+                mean_value = df['Returns'].mean()
+
+                fig, ax = plt.subplots(figsize=(12, 6))
+
+                colors = ['red' if x < 0 else 'blue' for x in df['Returns']]
+                bars = ax.bar(df['Months'], df['Returns'], color=colors)
+
+                ax.axhline(y=mean_value, color='green', linestyle='--', label='Mean')
+                ax.axhline(y=0, color='green', linewidth=0.8, label='Zero line')
+
+                ax.set_xlabel('Months of the year')
+                ax.set_ylabel('Returns')
+
+                ax.bar(0, 0, color='blue', label='Average Returns are Positive')
+                ax.bar(0, 0, color='red', label='Average Returns are Negative')
+
+                ax.legend()
+
+                plt.title('Average Monthly Returns')
+
+                st.pyplot(fig)
+
+                plt.figure(figsize=(10, 5))
+                color = [Color2("red", "yellow", "blue", i, 40, 60) for i in st.session_state.WRComplessivi]
+                plt.barh(st.session_state.Months_to_consider, st.session_state.WRComplessivi, color=color)
+                plt.axvline(40, color="red")
+                plt.axvline(50, color="yellow")
+                plt.axvline(60, color="blue")
+                plt.legend(
+                    ["Win Rate <= 40%", "40% <= Win Rate <= 60%", "Win Rate >= 60%"],
+                    loc='center left', bbox_to_anchor=(1, 0.5))
+                plt.title("Overall months's WIN RATE chart")
+                plt.xlabel("Win rate")
+                plt.ylabel("Months")
+                st.pyplot(plt.gcf())
+                plt.close()
+
+            else:
+                data = dict(
+                    zip(np.array(st.session_state.Months_to_consider), np.array(st.session_state.MesiComplessivi)))
+                df = pd.DataFrame(list(data.items()), columns=['Months', 'Returns'])
+
+                if df['Returns'].max() > 1 or df['Returns'].min() < -1:
+                    df['Returns'] = df['Returns'] / 100
+
+                mean_value = df['Returns'].mean()
+                std_dev = df['Returns'].std()
+
+                W = 400
+                H = 400
+
+                base = alt.Chart(df).encode(
+                    x=alt.X('Months:O', title='Months of the year')
+                )
+
+                fill_area = base.mark_area(opacity=0.2, color='gray').encode(
+                    y=alt.Y('y1:Q', title='Returns', axis=alt.Axis(format='%')),
+                    y2=alt.Y2('y2:Q'),
+                    tooltip=[
+                        alt.Tooltip('y1:Q', title='Average - Standard Deviation', format='.2%'),
+                        alt.Tooltip('y2:Q', title='Average + Standard Deviation', format='.2%'),
+                        alt.Tooltip('mean:Q', title='Average Return', format='.2%')
+                    ]
+                ).transform_calculate(
+                    y1=f"{mean_value - std_dev}",
+                    y2=f"{mean_value + std_dev}",
+                    mean=f"{mean_value}"
+                )
+
+                bars = base.mark_bar().encode(
+                    y=alt.Y('Returns:Q', axis=alt.Axis(format='%')),
+                    color=alt.condition(
+                        alt.datum.Returns > 0,
+                        alt.value('blue'),
+                        alt.value('red')
+                    ),
+                    tooltip=[
+                        alt.Tooltip('Months:O', title='Month'),
+                        alt.Tooltip('Returns:Q', title='Return', format='.2%'),
+                        alt.Tooltip('mean:Q', title='Average Return', format='.2%')
+                    ]
+                ).transform_calculate(
+                    mean=f"{mean_value}"
+                )
+
+                zero_line = alt.Chart(pd.DataFrame({'y': [0]})).mark_rule(color='green', size=2).encode(y='y')
+                mean_line = alt.Chart(pd.DataFrame({'y': [mean_value]})).mark_rule(
+                    color='orange',
+                    strokeDash=[4, 4],
+                    size=2
+                ).encode(y='y')
+
+                final_chart = (fill_area + bars + zero_line + mean_line).properties(
+                    width=W,
+                    height=H,
+                    title='Average Monthly Returns'
+                )
+
+                legend_data = pd.DataFrame({
+                    'color': ['gray', 'blue', 'red', 'green', 'orange'],
+                    'Chart elements': ['Standard Dev.', 'Positive Return', 'Negative Return', 'Zero Line',
+                                       'Average Return']
+                })
+
+                legend = alt.Chart(legend_data).mark_rect().encode(
+                    y=alt.Y('Chart elements:N', axis=alt.Axis(orient='right')),
+                    color=alt.Color('color:N', scale=None)
+                ).properties(
+                    width=150,
+                    title='Legend'
+                )
+
+                combined_chart = alt.hconcat(final_chart, legend)
+
+                st.altair_chart(combined_chart, use_container_width=True)
+
+                # SECOND CHART
+                df = pd.DataFrame({
+                    'Months': st.session_state.Months_to_consider,
+                    'WinRate': [wr / 100 for wr in st.session_state.WRComplessivi]
+                })
+
+                df['MonthOrder'] = range(len(df))
+
+                def get_color(wr):
+                    if wr <= 0.4:
+                        return 'red'
+                    elif wr <= 0.6:
+                        return 'yellow'
+                    else:
+                        return 'blue'
+
+                df['Color'] = df['WinRate'].apply(get_color)
+
+                base = alt.Chart(df).encode(
+                    y=alt.Y('Months:N', sort=alt.EncodingSortField(field='MonthOrder', order='ascending'),
+                            title='Months'),
+                    x=alt.X('WinRate:Q', title='Win rate', axis=alt.Axis(format='%'))
+                )
+
+                bars = base.mark_bar().encode(
+                    color=alt.Color('Color:N', scale=None),
+                    tooltip=[
+                        alt.Tooltip('Months:N', title='Month'),
+                        alt.Tooltip('WinRate:Q', title='Win Rate', format='.2%')
+                    ]
+                )
+
+                line_40 = alt.Chart(pd.DataFrame({'x': [0.4]})).mark_rule(color='red').encode(x='x')
+                line_50 = alt.Chart(pd.DataFrame({'x': [0.5]})).mark_rule(color='yellow').encode(x='x')
+                line_60 = alt.Chart(pd.DataFrame({'x': [0.6]})).mark_rule(color='blue').encode(x='x')
+
+                legend_data = pd.DataFrame({
+                    'color': ['red', 'yellow', 'blue'],
+                    'description': ['Win Rate <= 40%', '40% <= WR <= 60%',
+                                    'Win Rate >= 60%']
+                })
+
+                legend = alt.Chart(legend_data).mark_rect().encode(
+                    y=alt.Y('description:N', axis=alt.Axis(orient='right')),
+                    color=alt.Color('color:N', scale=None)
+                ).properties(
+                    width=20,
+                    title='Legend'
+                )
+
+                chart = (bars + line_40 + line_50 + line_60).properties(
+                    width=400,
+                    height=400,
+                    title='Overall months\'s WIN RATE chart'
+                )
+
+                combined_chart = alt.hconcat(chart, legend)
+
+                st.altair_chart(combined_chart, use_container_width=True)
+        else:
+            st.write("Please click 'Ready to go!' to calculate and display the data.")
 def credits():
     Text3("Who built this web application?")
     Text2("I'm Nicola Chimenti and I love finance, programming and Data Science")
@@ -1312,7 +1870,11 @@ def credits():
 
 def Home():
     Text3("Welcome to the \'Tekno Trader's Seasonality Application\'")
-    Text("Unlock the power of historical market analysis with the \'Tekno Trader's Seasonality Application\'. Whether you're a seasoned investor or just starting out, our web app provides the insights you need to make informed decisions in today's dynamic financial environment.")
+    Text("Analyze easily and with accuracy the seasonality tendencies of an asset with the \"Tekno Trader's Seasonality Application\"")
+    Text("Features:", "#ffffff")
+    Text("Comprehensive Data Access: Powered by the Yahoo Finance API, get accurate and up-to-date financial market data.")
+    Text("Customizable Analysis: Tailor your analysis to specific markets, time frames, and strategies.")
+    Text("User-Friendly Interface: Intuitive design that makes complex analysis accessible to all levels of users.")
     st.divider()
     # Links
     col1, col2, col3, col4 = st.columns(4)
@@ -1323,11 +1885,11 @@ def Home():
         Text("Start with analyzing market data")
         st.link_button("Analysis", "google.com")
     with col3:
-        Text("Istructions and suggestions")
+        Text("The importance of a bias")
         st.link_button("Why to use it", "google.com")
     with col4:
         Text("To keep in consideration while using the web app")
-        st.link_button("Keep in mind", "google.com")
+        st.link_button("Risks", "google.com")
     st.divider()
 
     Text3("Analyze Market Behavior:")
@@ -1371,17 +1933,41 @@ def Home():
     )
     st.divider()
 
-    Text3("In-Sample and Out-of-Sample Analysis:")
-    Text("Measure the robustness of your strategy with our advanced in-sample and out-of-sample analysis tools. Understand not only how your strategy performs on historical data but also how it holds up in new, unseen data, helping you reduce the risk of overfitting and optimize your investment approach.")
+    Text3("How you can use this web application")
+    Text("Probably, you are not going to find a strategy that could win a trading competition using this strategy, but what you are going to find is")
+    Text("1) A POSSIBLE BIAS", "#ffffff")
+    Text("So, you could see that in September the \'XYZ Market\' usually perform really well, and that it statistically go down 70% of the times. So it could be good to develop a strategy that keeps in consideration that you can have a strong advantage if you only take into consideration \'Buy\' trades.")
+    Text("Or maybe, you can see that the \'YZX Market\' usually goes down a lot in October, and that it can give you an high \'Risk to Reward Ratio\'; in that case you could think of a strategy that is going to trade in a daily timeframe maybe, searching for point where to enter and take advantage of the tendency of the market to go in a certain direction.")
+    if st.button("Analyze seasonality"):
+        go_to_analysis()
+    st.write()
+    Text("2) DEVELOP A METHOD", "#ffffff")
+    Text("As you can see, this web application follows a specific journey to develop a simple strategy: it first analyze how the market moves, that try to test a simple strategy and that develop a more specific and accurate strategy.")
+    Text("So you could notice how I did certain things, for example what indices I used to evaluate the strategy performances or which techniques.")
+    if st.button("Start with the journey!"):
+        go_to_analysis()
+    st.write()
+
+    Text("3) THE SOURCE CODE", "#ffffff")
+    Text("Did you find useful something and want to recreate it? You can find the source code down below, in the \'Credits\' section of the web application.")
+    if st.button("Credits and Source code"):
+        go_to_credits()
     st.divider()
 
-    Text3("Why Choose MarketTrend Pro?")
-    Text("Comprehensive Data Access: Powered by the Yahoo Finance API, get accurate and up-to-date financial market data.")
-    Text("Customizable Analysis: Tailor your analysis to specific markets, time frames, and strategies.")
-    Text("User-Friendly Interface: Intuitive design that makes complex analysis accessible to all levels of investors.")
+    Text3("Understanding Risks")
+    Text2("This web application can help you to develop an effective strategy to trade in the markets, but you have to know the risks!")
+    Text("You might ask yourself \"What could possibly go wrong?\" and well, there are a lot of thing to keep in consideration; here I'll explain three of this:")
+    Text("1) The markets are dangerous", "#ffffff")
+    Text("I know that this might sound like a clichè, but the chance of losing your capital are real and must be kept into consideration: there are no magic tools or strategy that can assure money flows, as we are going to see in the next points")
+    Text("2) Obsolescence", "#ffffff")
+    Text("Everything can change in a moment in our life, and this is it as well for financial market. Maybe you developed a strong and statistical based strategy, but this could \"break\" and not make money anymore if the behaviour of the markets changes (and if your strategy is based in the specific behaviour that changed).")
+    Text("The causes are usually easy to explain once it happened, but it is never easy to prevent it!")
+    Text("3) Risk Consideration", "#ffffff")
+    Text("Maybe everything is perfect in your strategy and could make a lot of money, but maybe what could ruin everything is the lack of consideration of how much to risk in every position, your maximum exposure or how your different strategies/assets can interact with each other in terms of performance")
+    Text("This is really common, and you have to consider that TRADING IS A SURVIVAL GAME that involves money as your primary resource: that is why you have first of all to think about how to prevent losing money, and than eventually on how to do it!")
     st.divider()
 
-    Text3("Start exploring the markets like never before with this web app. Your strategic edge is just a few clicks away.")
+    Text3("Start exploring the markets like never before with this web app. Your strategic edge is just a few clicks away, use it in the right way!")
 
 pagine = ["Home", "Analysis", "Basic Strategy", "Credits"]
 
@@ -1492,7 +2078,7 @@ def nav_buttons():
 
 def sidebar_nav():
     with st.sidebar:
-        Text3("Web App Pages", color="#880C14")
+        Text3("Web App Pages", color="fff")
     counter = 0
     Links = [[url_analysis, 50], [url_analysis, 50], [url_strategy, 60], ["https://i.postimg.cc/7LynpkrL/Whats-App-Image-2024-07-27-at-16-36-44.jpg", 30]]
     for page, description in pagine.items():
