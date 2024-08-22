@@ -1884,13 +1884,13 @@ def Home():
         st.link_button("Strategy", "https://seasonalityanalysis.streamlit.app/~/+/#craft-winning-strategies")
     with col2:
         Text("Start with analyzing market data")
-        st.link_button("Analysis", "google.com")
+        st.link_button("Analysis", "https://seasonalityanalysis.streamlit.app/~/+/#analyze-market-behavior")
     with col3:
-        Text("The importance of a bias")
-        st.link_button("Why to use it", "google.com")
+        Text("How to use this web app")
+        st.link_button("Can it be good?", "ghttps://seasonalityanalysis.streamlit.app/~/+/#how-you-can-use-this-web-application")
     with col4:
         Text("To keep in consideration while using the web app")
-        st.link_button("Risks", "google.com")
+        st.link_button("Risks", "https://seasonalityanalysis.streamlit.app/~/+/#understanding-risks")
     st.divider()
 
     Text3("Analyze Market Behavior:")
@@ -2147,6 +2147,7 @@ elif st.session_state.selezione_pagina == "Basic Strategy":
     nav_buttons()
 
 elif st.session_state.selezione_pagina == "Credits":
+    Advanced_Strategy()
     credits()
     st.write("## Navigate to other pages:")
     nav_buttons()
