@@ -11,12 +11,11 @@ import pandas as pd
 import streamlit as st
 import yfinance as yf
 
-# COLORI DA INSERIRE
-# text, widget e label = bianco
+# Colors
+# text, widget e label = white
 # sidebar + text = #1A4054
 # header = #880C14
 # background = #649ABA
-# Color pickers
 sidebar_color = "#1A4054"
 main_bg_color = "#649ABA"
 text_color = "#1A4054"
@@ -30,7 +29,7 @@ url_strategy = "https://i.postimg.cc/ncT1PhkP/screen-contorno.png"
 url_strategy2 = "https://i.postimg.cc/WbYzhB8y/strategy-red.png"
 url_home = "https://i.postimg.cc/Bnm5nhLQ/screen-home-con-contorno.png"
 
-# DA MODIFICARE LA SIDEBAR
+# Useful function for performances evaluation
 def WinRate(Arr):
     tot = 0
     for i in Arr:
@@ -170,7 +169,7 @@ def main_page():
     # 3) Formattazione colori overall average drawdown (i colori devono essere basati sulla media oscillazioni e sulla varianza)
 
     # Introduction for the user
-    Text3("LET'S ANALYZE THE SEASONALITY OF AN ASSET 📊")
+    Text3("LET'S ANALYZE THE SEASONALITY OF AN ASSET 📊", "#ffffff")
     Text2("You have just to set: when to start with the monitoration,when to end and which is the asset to see")
     Text(
         "Please, note that it has been used the YAHOO! FINANCE API, so you have to select the ticker of the asset based on the yahoo!finance database")
@@ -183,7 +182,7 @@ def main_page():
       color: {text_color};
     }}
     </style>
-    <p class="colored-text">You can check the name of the asset you're searching at this <a href="{url}">link</a>.</p>
+    <p class="colored-text"> You can check the name of the asset you're searching at this <a href="{url}">link</a>.</p>
     """, unsafe_allow_html=True)
 
     AnnoPartenz = st.number_input("Starting year 📅: ", min_value=1850, max_value=current_year - 1, step=1)
@@ -303,10 +302,11 @@ def main_page():
         H = 400  # Chart Height
 
         Text3("LET'S SEE THE RESULTS 📈")
-        Months = st.radio("Output selection:", ("Choose manually the months", "Represent every month"))#st.toggle("Represent all months")
+        Months = st.radio("Output selection:",
+                          ("Choose manually the months", "Represent every month"))  # st.toggle("Represent all months")
 
         first_representation_model = "Not longer"
-        if (Months == "Choose manually the months"): #== False):
+        if (Months == "Choose manually the months"):  # == False):
             if (first_representation_model == "Longer"):
                 # Create a dictionary to store the state of each toggle
                 if 'month_toggles' not in st.session_state:
@@ -343,9 +343,9 @@ def main_page():
                     colori.append(Color("#FF0000", "#0000FF", Y, 0))
 
                 # Defining a good title, to make everything more clear
-                Text3(f" {number_emojis[i - 1]} MONTHLY RETURNS of {asset_name} on the month of: {NomiMesi1[i - 1]} \n")
-                Text3(f"WIN RATE: {str(round(WinRate(Mese), 2))}%\n")
-                Text3(f"AVERAGE RETURN: {str(round(np.mean(Mese), 2))} %\n")
+                Text3(f" {number_emojis[i - 1]} MONTHLY RETURNS of {asset_name} on the month of: {NomiMesi1[i - 1]} \n", "#ffffff")
+                Text2(f"WIN RATE: {str(round(WinRate(Mese), 2))}%\n")
+                Text2(f"AVERAGE RETURN: {str(round(np.mean(Mese), 2))} %\n")
 
                 DevStd = math.sqrt(sum((x - np.mean(Mese)) ** 2 for x in Mese) / len(Mese))
                 Text2(f"Standard deviation: {str(round(DevStd, 2))}%")
@@ -625,7 +625,6 @@ def main_page():
                 # End of the month's analysis
                 st.divider()
 
-        # Il resto del codice rimane invariato
         for i in range(1, 13):
             selections = {}
             db_selections = {}
@@ -1852,26 +1851,67 @@ def Advanced_Strategy():
         else:
             st.write("Please click 'Ready to go!' to calculate and display the data.")
 def credits():
-    Text3("Who built this web application?")
-    Text2("I'm Nicola Chimenti and I love finance, programming and Data Science")
-    Text2("My main goal is to break into a Quantitative Trading Firm")
-    st.image("https://i.postimg.cc/7LynpkrL/Whats-App-Image-2024-07-27-at-16-36-44.jpg")  # caption="My name is Nicola Chimenti.\nI'm currently pursuing a degree in \"Digital Economics\" and I love finance, programming and Data Science" , use_column_width=True)
-    Text2(
-        "I'm currently pursuing a degree in \"Digital Economics\" and I program trading softwares (VAT Code: 02674000464) for traders who want to automatize their strategy or analyze certain data to find a better edge")
-    st.write("\n# CONTACT ME")
-    st.write(
-        "### ◾ [LinkedIn](https://www.linkedin.com/in/nicolachimenti?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app)")
-    st.write("### ◾ Email: nicola.chimenti.work@gmail.com")
-    st.write("\n# RESOURCES")
-    st.write("◾ [GitHub Profile](https://github.com/TeknoTrader)")
-    st.write("◾ [MQL5 Profile](https://www.mql5.com/it/users/teknotrader) with reviews")
-    st.write("◾ [MT4 free softwares](https://www.mql5.com/it/users/teknotrader/seller#!category=2) for trading")
-    st.write("\n### Are you interested in the source code? 🧾")
-    st.write("Visit the [GitHub repository](https://github.com/TeknoTrader/OrganizationTools)")
+    def Link(text, link_text, url, is_subheader=True, color=text_color):
+        font_size = "1.5em" if is_subheader else "1em"
+        font_weight = "bold" if is_subheader else "normal"
 
+        st.markdown(f"""
+            <style>
+            .colored-text {{
+                color: {color};
+                font-size: {font_size};
+                font-weight: {font_weight};
+            }}
+            .colored-text a {{
+                color: {color};
+                text-decoration: underline;
+                cursor: pointer;
+            }}
+            </style>
+            <p class="colored-text">{text} <a href="{url}">{link_text}</a></p>
+            """, unsafe_allow_html=True)
+    Text3("Who built this web application?", "#ffffff")
+    Text2("I'm Nicola Chimenti and I love finance, programming and Data Science.")
+    Text2("My main goal is to break into a Quantitative Trading Firm as trader or strategy validator.")
+    st.image("https://i.postimg.cc/7LynpkrL/Whats-App-Image-2024-07-27-at-16-36-44.jpg")  # caption="My name is Nicola Chimenti.\nI'm currently pursuing a degree in \"Digital Economics\" and I love finance, programming and Data Science" , use_column_width=True)
+    Text2("I'm currently pursuing a degree in \"Digital Economics\" and I program trading softwares for traders who want to automatize their strategy or analyze certain data to find a better statistical hedge")
+
+    st.divider()
+    Text3("CONTACT ME", "#ffffff")
+    Link("◾ Visit my ", "LinkedIn profile", "https://www.linkedin.com/in/nicolachimenti?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app")
+
+    def custom_email_link(email, color=text_color, font_size="1.5em"):
+        st.markdown(f"""
+            <style>
+            .email-text {{
+                color: {color};
+                font-size: {font_size};
+                font-weight: bold;
+            }}
+            .email-text a {{
+                color: {color};
+                text-decoration: underline;
+                cursor: pointer;
+            }}
+            </style>
+            <p class="email-text">◾ My Email: <a href="mailto:{email}">{email}</a></p>
+            """, unsafe_allow_html=True)
+    custom_email_link("nicola.chimenti.work@gmail.com")
+
+    st.divider()
+    Text3("RESOURCES", "#ffffff")
+    Link("◾ Visit my ", "GitHub Profile", "https://github.com/TeknoTrader")
+    Link("◾ View the reviews on my ", "MQL5 Profile", "https://www.mql5.com/it/users/teknotrader")
+    Link("◾ Download my ", "MT4 free trading softwares", "https://www.mql5.com/it/users/teknotrader/seller#!category=2")
+
+    st.divider()
+    Text3("Are you interested in the source code? 🧾", "#ffffff")
+    Link("Visit the ", "GitHub repository", "https://github.com/TeknoTrader/OrganizationTools")
+    st.divider()
 def Home():
-    Text3("Welcome to the \'Tekno Trader's Seasonality Application\'")
-    Text("Analyze easily and with accuracy the seasonality tendencies of an asset with the \"Tekno Trader's Seasonality Application\"")
+    # The principle
+    Text3("Welcome to the \"Tekno Trader\'s Seasonality Application\"")
+    Text("Analyze easily and with accuracy the seasonality tendencies of an asset with this web application")
     Text("Features:", "#ffffff")
     Text("Comprehensive Data Access: Powered by the Yahoo Finance API, get accurate and up-to-date financial market data.")
     Text("Customizable Analysis: Tailor your analysis to specific markets, time frames, and strategies.")
@@ -1880,19 +1920,21 @@ def Home():
     # Links
     col1, col2, col3, col4 = st.columns(4)
     with col1:
-        Text("See simple strategies' performances")
-        st.link_button("Strategy", "https://seasonalityanalysis.streamlit.app/~/+/#craft-winning-strategies")
-    with col2:
         Text("Start with analyzing market data")
-        st.link_button("Analysis", "https://seasonalityanalysis.streamlit.app/~/+/#analyze-market-behavior")
+        st.link_button("Analysis", "#analyze-market-behavior")
+    with col2:
+        Text("See simple strategies' performances")
+        st.link_button("Strategy", "#craft-winning-strategies")
     with col3:
-        Text("How to use this web app corretly")
-        st.link_button("Can it be good?", "ghttps://seasonalityanalysis.streamlit.app/~/+/#how-you-can-use-this-web-application")
+        Text("How to use this web application properly")
+        st.link_button("Instructions", "#how-you-can-use-this-web-application")
     with col4:
         Text("To keep in consideration while using the web app")
-        st.link_button("Risks", "https://seasonalityanalysis.streamlit.app/~/+/#understanding-risks")
+        st.link_button("Risks", "#understanding-risks")
     st.divider()
 
+    # First section
+    st.markdown('<a id="analyze-market-behavior"></a>', unsafe_allow_html=True)
     Text3("Analyze Market Behavior:")
     Text("Dive deep into the historical performance of your chosen markets in specific months. With this web application, you can analyze how markets have behaved over specific time windows, identifying regularities and patterns. Curious if September is traditionally a tough month for the S&P 500? Our platform helps you uncover these insights, allowing you to predict market trends with greater accuracy.")
     # Button print
@@ -1914,6 +1956,8 @@ def Home():
     )
     st.divider()
 
+    # Second section
+    st.markdown('<a id="craft-winning-strategies"></a>', unsafe_allow_html=True)
     Text3("Craft Winning Strategies:")
     Text("Develop and test simple yet effective market entry and exit strategies. Choose a specific month to enter the market and another to exit, then evaluate the potential success of your strategy with a range of performance indicators. See how your strategy would have performed historically, and gain confidence in your trading decisions.")
     # Button print
@@ -1934,6 +1978,8 @@ def Home():
     )
     st.divider()
 
+    # Third section
+    st.markdown('<a id="how-you-can-use-this-web-application"></a>', unsafe_allow_html=True)
     Text3("How you can use this web application")
     Text("Probably, you are not going to find a strategy that could win a trading competition using this strategy, but what you are going to find is")
     Text("1) A POSSIBLE BIAS", "#ffffff")
@@ -1955,6 +2001,8 @@ def Home():
         go_to_credits()
     st.divider()
 
+    # Fourth section
+    st.markdown('<a id="understanding-risks"></a>', unsafe_allow_html=True)
     Text3("Understanding Risks")
     Text2("This web application can help you to develop an effective strategy to trade in the markets, but you have to know the risks!")
     Text("You might ask yourself \"What could possibly go wrong?\" and well, there are a lot of thing to keep in consideration; here I'll explain three of this:")
@@ -2045,15 +2093,15 @@ def apply_custom_css(sidebar_color, main_bg_color, text_color, widget_color, hea
     """
     st.markdown(custom_css, unsafe_allow_html=True)
 
-# Definizione delle pagine e delle loro descrizioni
+# Pages description and definition
 pagine = {
     "Home": "Welcome page and overview of the application",
-    "Analysis": "Detailed analysis of financial data",
-    "Basic Strategy": "Create and test basic trading strategies",
-    "Credits": "Information about the creators and contributors"
+    "Analysis": "Detailed analysis of an asset's behaviour depending on the month",
+    "Basic Strategy": "Create and test a really simple trading strategy",
+    "Credits": "Information about the creator and useful resources"
 }
 
-# Funzioni di navigazione individuali
+# Navigation between pages
 def go_to_home():
     st.session_state.selezione_pagina = "Home"
     st.experimental_rerun()
@@ -2069,9 +2117,11 @@ def go_to_basic_strategy():
 def go_to_credits():
     st.session_state.selezione_pagina = "Credits"
     st.experimental_rerun()
-def nav_buttons():
-    cols = st.columns(len(pagine))
-    for idx, page in enumerate(pagine.keys()):
+
+def nav_buttons(Page_Not_to_Be_Considered):
+    pagine_da_mostrare = [p for p in pagine.keys() if p != Page_Not_to_Be_Considered]
+    cols = st.columns(len(pagine_da_mostrare))
+    for idx, page in enumerate(pagine_da_mostrare):
         if cols[idx].button(page, key=f"nav_{page}_{st.session_state.selezione_pagina}"):
             st.session_state.selezione_pagina = page
             st.experimental_rerun()
@@ -2079,7 +2129,7 @@ def nav_buttons():
 
 def sidebar_nav():
     with st.sidebar:
-        Text3("Web App Pages", color="#000000")
+        Text3("Web App Pages", color="fff")
     counter = 0
     Links = [[url_home, 50], [url_analysis, 50], [url_strategy, 60], ["https://i.postimg.cc/7LynpkrL/Whats-App-Image-2024-07-27-at-16-36-44.jpg", 30]]
     for page, description in pagine.items():
@@ -2128,25 +2178,59 @@ apply_custom_css(sidebar_color, main_bg_color, text_color, widget_color, header_
 # Sidebar navigation
 sidebar_nav()
 
+def End_Page():
+    def custom_info_box(background_color="#f0f0f0", text_color="#000000"):
+        st.markdown(f"""
+            <style>
+            .info-box {{
+                background-color: {background_color};
+                padding: 20px;
+                border-radius: 5px;
+                margin-bottom: 20px;
+            }}
+            .info-box p {{
+                color: {text_color};
+                margin: 0;
+                padding: 5px 0;
+            }}
+            </style>
+            <div class="info-box">
+                <p>Designed and developed by Nicola Chimenti</p>
+                <p>My company name: "Tekno Trader"</p>
+                <p>VAT Code: 02674000464</p>
+            </div>
+            """, unsafe_allow_html=True)
+
+    custom_info_box(header_color, "#ffffff")
+
 # Main content
 if st.session_state.selezione_pagina == "Home":
     Home()
     st.divider()
     st.write("## Navigate to other pages:")
-    nav_buttons()
+    nav_buttons("Home")
+    st.divider()
+    End_Page()
 
 elif st.session_state.selezione_pagina == "Analysis":
     main_page()
     st.write("## Navigate to other pages:")
-    nav_buttons()
+    nav_buttons("Analysis")
+    st.divider()
+    End_Page()
 
 elif st.session_state.selezione_pagina == "Basic Strategy":
-    st.write("# Create a basic strategy")
+    Text3("CREATE A BASIC STRATEGY", "#ffffff")
+    Text2("Test a \"1 month holding\" strategy.")
+    Text("The strategy that you can test here are based on buying at the beginning of the month you choose and selling at the end of it.")
+    Text("You will see some metrics to analyze the strategy performances in a detailed way, in order also to comprehend a possible approach for the evaluation of the hystorical performance of a strategy")
     Simple_strategy()
     st.write("## Navigate to other pages:")
-    nav_buttons()
+    nav_buttons("Basic Strategy")
+    End_Page()
 
 elif st.session_state.selezione_pagina == "Credits":
     credits()
-    st.write("## Navigate to other pages:")
-    nav_buttons()
+    Text2("Navigate to other pages:", "#ffffff")
+    nav_buttons("Credits")
+    End_Page()
