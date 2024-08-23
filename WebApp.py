@@ -1906,7 +1906,7 @@ def credits():
 
     st.divider()
     Text3("Are you interested in the source code? 🧾", "#ffffff")
-    Link("Visit the ", "GitHub repository", "https://github.com/TeknoTrader/OrganizationTools")
+    Link("Visit the ", "GitHub repository", "https://github.com/TeknoTrader/SEASONALITY")
     st.divider()
 def Home():
     # The principle
