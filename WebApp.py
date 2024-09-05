@@ -2182,6 +2182,8 @@ apply_custom_css(sidebar_color, main_bg_color, text_color, widget_color, header_
 sidebar_nav()
 
 def End_Page():
+    st.write("")
+    st.write("")
     def custom_info_box(background_color="#f0f0f0", text_color="#000000"):
         st.markdown(f"""
             <style>
