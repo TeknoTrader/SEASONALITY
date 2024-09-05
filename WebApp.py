@@ -13,26 +13,6 @@ import yfinance as yf
 
 # Colors
 # text, widget e label = whitearray = []
-    for anno in range(startY, endY):
-        start_date = date(anno, mese, 1)
-        end_date = (start_date + timedelta(days=32)).replace(day=1)  # Primo giorno del mese successivo
-        
-        try:
-            dff = yf.download(ticker, start=start_date, end=end_date, interval="1mo")
-            
-            if not dff.empty and 'Open' in dff.columns and 'Close' in dff.columns:
-                open_price = dff['Open'].iloc[0]
-                close_price = dff['Close'].iloc[0]
-                resultAbs = close_price - open_price  # Rendimento nominale
-                result = resultAbs * 100 / open_price  # In percentuale
-                array.append(result)
-            else:
-                array.append(np.nan)
-        
-        except Exception:
-            array.append(np.nan)
-    
-    return array
 # sidebar + text = #1A4054
 # header = #880C14
 # background = #649ABA
