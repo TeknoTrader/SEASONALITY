@@ -632,45 +632,28 @@ def main_page():
             if (Months == True) or (NomiMesi1[i - 1] in options):
                 Represent(Mensilit(i, AnnoPartenza, AnnoFine), i, selections, db_selections)
 
-    def Mensilit(mese, startY, endY):
-        array = []
-        for anno in range(startY, endY):
-            if (mese != 12):  # Se è dicembre, il mese successivo è gennaio quindi si sta attenti
-                strt = date(i, mese, 1)
-                end = date(i, mese + 1, 1)
-                try:
-                    dff = yf.download(ticker, start=start_date, end=end_date, interval="1mo")
-            
-                    if not dff.empty and 'Open' in dff.columns and 'Close' in dff.columns:
-                        open_price = dff['Open'].iloc[0]
-                        close_price = dff['Close'].iloc[0]
-                        resultAbs = close_price - open_price  # Rendimento nominale
-                        result = resultAbs * 100 / open_price  # In percentuale
-                        array.append(result)
-                    else:
-                        array.append(np.nan)
-        
-                except Exception:
-                    array.append(np.nan)
-            else:
-                strt = date(i, mese, 1)
-                end = date(i + 1, 1, 1)
-                try:
-                    dff = yf.download(ticker, start=start_date, end=end_date, interval="1mo")
-            
-                    if not dff.empty and 'Open' in dff.columns and 'Close' in dff.columns:
-                        open_price = dff['Open'].iloc[0]
-                        close_price = dff['Close'].iloc[0]
-                        resultAbs = close_price - open_price  # Rendimento nominale
-                        result = resultAbs * 100 / open_price  # In percentuale
-                        array.append(result)
-                    else:
-                        array.append(np.nan)
-        
-                except Exception:
-                    array.append(np.nan)
-    
-        return array
+        def Mensilit(mese, startY, endY):
+            array = []
+            for i in range(startY, endY):
+                if (mese != 12):  # Se è dicembre, il mese successivo è gennaio quindi si sta attenti
+                    strt = date(i, mese, 1)
+                    end = date(i, mese + 1, 1)
+                    dff = yf.download(ticker, start=strt, end=end, interval="1mo")
+                    dffc = pd.DataFrame(dff["Close"])
+                    dffo = pd.DataFrame(dff["Open"])
+                    resultAbs = dffc.iat[0, 0] - dffo.iat[0, 0]  # Nominal return
+                    result = resultAbs * 100 / dffo.iat[0, 0]  # In percentage
+                    array.append(result)
+                else:
+                    strt = date(i, mese, 1)
+                    end = date(i + 1, 1, 1)
+                    dff = yf.download(ticker, start=strt, end=end, interval="1mo")
+                    dffc = pd.DataFrame(dff["Close"])
+                    dffo = pd.DataFrame(dff["Open"])
+                    resultAbs = dffc.iat[0, 0] - dffo.iat[0, 0]  # Nominal return
+                    result = resultAbs * 100 / dffo.iat[0, 0]  # In percentage
+                    array.append(result)
+            return array
 
     def High(mese, startY, endY):
         array = []
@@ -887,42 +870,25 @@ def Simple_strategy():
 
     def Mensilit(mese, startY, endY):
         array = []
-        for anno in range(startY, endY):
+        for i in range(startY, endY):
             if (mese != 12):  # Se è dicembre, il mese successivo è gennaio quindi si sta attenti
                 strt = date(i, mese, 1)
                 end = date(i, mese + 1, 1)
-                try:
-                    dff = yf.download(ticker, start=start_date, end=end_date, interval="1mo")
-            
-                    if not dff.empty and 'Open' in dff.columns and 'Close' in dff.columns:
-                        open_price = dff['Open'].iloc[0]
-                        close_price = dff['Close'].iloc[0]
-                        resultAbs = close_price - open_price  # Rendimento nominale
-                        result = resultAbs * 100 / open_price  # In percentuale
-                        array.append(result)
-                    else:
-                        array.append(np.nan)
-        
-                except Exception:
-                    array.append(np.nan)
+                dff = yf.download(ticker, start=strt, end=end, interval="1mo")
+                dffc = pd.DataFrame(dff["Close"])
+                dffo = pd.DataFrame(dff["Open"])
+                resultAbs = dffc.iat[0, 0] - dffo.iat[0, 0]  # Nominal return
+                result = resultAbs * 100 / dffo.iat[0, 0]  # In percentage
+                array.append(result)
             else:
                 strt = date(i, mese, 1)
                 end = date(i + 1, 1, 1)
-                try:
-                    dff = yf.download(ticker, start=start_date, end=end_date, interval="1mo")
-            
-                    if not dff.empty and 'Open' in dff.columns and 'Close' in dff.columns:
-                        open_price = dff['Open'].iloc[0]
-                        close_price = dff['Close'].iloc[0]
-                        resultAbs = close_price - open_price  # Rendimento nominale
-                        result = resultAbs * 100 / open_price  # In percentuale
-                        array.append(result)
-                    else:
-                        array.append(np.nan)
-        
-                except Exception:
-                    array.append(np.nan)
-    
+                dff = yf.download(ticker, start=strt, end=end, interval="1mo")
+                dffc = pd.DataFrame(dff["Close"])
+                dffo = pd.DataFrame(dff["Open"])
+                resultAbs = dffc.iat[0, 0] - dffo.iat[0, 0]  # Nominal return
+                result = resultAbs * 100 / dffo.iat[0, 0]  # In percentage
+                array.append(result)
         return array
 
     def High(mese, startY, endY):
@@ -1468,42 +1434,26 @@ def Advanced_Strategy():
 
         def Mensilit(mese, startY, endY):
             array = []
-            for anno in range(startY, endY):
+
+            for i in range(startY, endY):
                 if (mese != 12):  # Se è dicembre, il mese successivo è gennaio quindi si sta attenti
                     strt = date(i, mese, 1)
                     end = date(i, mese + 1, 1)
-                    try:
-                        dff = yf.download(ticker, start=start_date, end=end_date, interval="1mo")
-            
-                        if not dff.empty and 'Open' in dff.columns and 'Close' in dff.columns:
-                            open_price = dff['Open'].iloc[0]
-                            close_price = dff['Close'].iloc[0]
-                            resultAbs = close_price - open_price  # Rendimento nominale
-                            result = resultAbs * 100 / open_price  # In percentuale
-                            array.append(result)
-                        else:
-                            array.append(np.nan)
-        
-                    except Exception:
-                        array.append(np.nan)
+                    dff = yf.download(ticker, start=strt, end=end, interval="1mo")
+                    dffc = pd.DataFrame(dff["Close"])
+                    dffo = pd.DataFrame(dff["Open"])
+                    resultAbs = dffc.iat[0, 0] - dffo.iat[0, 0]  # Nominal return
+                    result = resultAbs * 100 / dffo.iat[0, 0]  # In percentage
+                    array.append(result)
                 else:
                     strt = date(i, mese, 1)
                     end = date(i + 1, 1, 1)
-                    try:
-                        dff = yf.download(ticker, start=start_date, end=end_date, interval="1mo")
-            
-                        if not dff.empty and 'Open' in dff.columns and 'Close' in dff.columns:
-                            open_price = dff['Open'].iloc[0]
-                            close_price = dff['Close'].iloc[0]
-                            resultAbs = close_price - open_price  # Rendimento nominale
-                            result = resultAbs * 100 / open_price  # In percentuale
-                            array.append(result)
-                        else:
-                            array.append(np.nan)
-            
-                    except Exception:
-                        array.append(np.nan)
-    
+                    dff = yf.download(ticker, start=strt, end=end, interval="1mo")
+                    dffc = pd.DataFrame(dff["Close"])
+                    dffo = pd.DataFrame(dff["Open"])
+                    resultAbs = dffc.iat[0, 0] - dffo.iat[0, 0]  # Nominal return
+                    result = resultAbs * 100 / dffo.iat[0, 0]  # In percentage
+                    array.append(result)
             return array
             
 
