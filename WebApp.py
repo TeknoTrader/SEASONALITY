@@ -230,7 +230,15 @@ def main_page():
             if not data.empty:
                 # Find the first data avaible, to avoid errors
                 first_date = data.index[0]
-                
+                # Converti in numerico, trasformando i valori non validi in NaN
+                Close_Data = first_date['Close']
+                # Converti in numerico, trasformando i valori non validi in NaN
+                Close_Data = pd.to_numeric(Close_Data, errors='coerce')
+                # Rimuovi i valori NaN
+                Close_Data = Close_Data.dropna()
+                # Se vuoi aggiornare la colonna 'Close' nel DataFrame originale:
+                first_date = Close_Data
+
                 Text(f"Data of  {ticker} avaible from: {first_date.date()}")
                 year = int(first_date.strftime('%Y'))
             else:
@@ -765,6 +773,14 @@ def Simple_strategy():
         if not data.empty:
             # Find the first data avaible, to avoid errors
             first_date = data.index[0]
+            # Converti in numerico, trasformando i valori non validi in NaN
+            Close_Data = Data['Close']
+            # Converti in numerico, trasformando i valori non validi in NaN
+            Close_Data = pd.to_numeric(Close_Data, errors='coerce')
+            # Rimuovi i valori NaN
+            Close_Data = Close_Data.dropna()
+            # Se vuoi aggiornare la colonna 'Close' nel DataFrame originale:
+            Data['Close'] = first_date
             
             Text(f"Data of  {ticker} avaible from: {first_date.date()}")
             year = int(first_date.strftime('%Y'))
@@ -1329,6 +1345,14 @@ def Advanced_Strategy():
             if not data.empty:
                 # Find the first data avaible, to avoid errors
                 first_date = data.index[0]
+                # Converti in numerico, trasformando i valori non validi in NaN
+                Close_Data = Data['Close']
+                # Converti in numerico, trasformando i valori non validi in NaN
+                Close_Data = pd.to_numeric(Close_Data, errors='coerce')
+                # Rimuovi i valori NaN
+                Close_Data = Close_Data.dropna()
+                # Se vuoi aggiornare la colonna 'Close' nel DataFrame originale:
+                Data['Close'] = first_date
                 
                 Text(f"Data of  {ticker} avaible from: {first_date.date()}")
                 year = int(first_date.strftime('%Y'))
