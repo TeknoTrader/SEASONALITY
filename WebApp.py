@@ -230,10 +230,6 @@ def main_page():
             if not data.empty:
                 # Find the first data avaible, to avoid errors
                 first_date = data.index[0]
-                # Convert non-numeric values in NaN
-                Data = pd.to_numeric(Data, errors='coerce')
-                # Remove NaN values
-                Data = Data.dropna()
                 
                 Text(f"Data of  {ticker} avaible from: {first_date.date()}")
                 year = int(first_date.strftime('%Y'))
@@ -769,10 +765,6 @@ def Simple_strategy():
         if not data.empty:
             # Find the first data avaible, to avoid errors
             first_date = data.index[0]
-            # Convert non-numeric values in NaN
-            Data = pd.to_numeric(Data, errors='coerce')
-            # Remove NaN values
-            Data = Data.dropna()
             
             Text(f"Data of  {ticker} avaible from: {first_date.date()}")
             year = int(first_date.strftime('%Y'))
