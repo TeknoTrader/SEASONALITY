@@ -1466,45 +1466,45 @@ def Advanced_Strategy():
         else:
             options = NomiMesi1
 
-        def Mensilit(mese, startY, endY, ticker):
+        def Mensilit(mese, startY, endY):
             array = []
-        for anno in range(startY, endY):
-            if (mese != 12):  # Se è dicembre, il mese successivo è gennaio quindi si sta attenti
-                strt = date(i, mese, 1)
-                end = date(i, mese + 1, 1)
-                try:
-                    dff = yf.download(ticker, start=start_date, end=end_date, interval="1mo")
+            for anno in range(startY, endY):
+                if (mese != 12):  # Se è dicembre, il mese successivo è gennaio quindi si sta attenti
+                    strt = date(i, mese, 1)
+                    end = date(i, mese + 1, 1)
+                    try:
+                        dff = yf.download(ticker, start=start_date, end=end_date, interval="1mo")
             
-                    if not dff.empty and 'Open' in dff.columns and 'Close' in dff.columns:
-                        open_price = dff['Open'].iloc[0]
-                        close_price = dff['Close'].iloc[0]
-                        resultAbs = close_price - open_price  # Rendimento nominale
-                        result = resultAbs * 100 / open_price  # In percentuale
-                        array.append(result)
-                    else:
-                        array.append(np.nan)
+                        if not dff.empty and 'Open' in dff.columns and 'Close' in dff.columns:
+                            open_price = dff['Open'].iloc[0]
+                            close_price = dff['Close'].iloc[0]
+                            resultAbs = close_price - open_price  # Rendimento nominale
+                            result = resultAbs * 100 / open_price  # In percentuale
+                            array.append(result)
+                        else:
+                            array.append(np.nan)
         
-                except Exception:
-                    array.append(np.nan)
-            else:
-                strt = date(i, mese, 1)
-                end = date(i + 1, 1, 1)
-                try:
-                    dff = yf.download(ticker, start=start_date, end=end_date, interval="1mo")
+                    except Exception:
+                        array.append(np.nan)
+                else:
+                    strt = date(i, mese, 1)
+                    end = date(i + 1, 1, 1)
+                    try:
+                        dff = yf.download(ticker, start=start_date, end=end_date, interval="1mo")
             
-                    if not dff.empty and 'Open' in dff.columns and 'Close' in dff.columns:
-                        open_price = dff['Open'].iloc[0]
-                        close_price = dff['Close'].iloc[0]
-                        resultAbs = close_price - open_price  # Rendimento nominale
-                        result = resultAbs * 100 / open_price  # In percentuale
-                        array.append(result)
-                    else:
+                        if not dff.empty and 'Open' in dff.columns and 'Close' in dff.columns:
+                            open_price = dff['Open'].iloc[0]
+                            close_price = dff['Close'].iloc[0]
+                            resultAbs = close_price - open_price  # Rendimento nominale
+                            result = resultAbs * 100 / open_price  # In percentuale
+                            array.append(result)
+                        else:
+                            array.append(np.nan)
+            
+                    except Exception:
                         array.append(np.nan)
-        
-                except Exception:
-                    array.append(np.nan)
     
-        return array
+            return array
             
 
         def High(mese, startY, endY):
