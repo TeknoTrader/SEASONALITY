@@ -226,7 +226,7 @@ def main_page():
         Text(f"\nEnd of the relevation: {end}")
         year = 0
         try:
-            data = yf.download(ticker)
+            data = yf.download(ticker, period = "1mo")
             if not data.empty:
                 # Find the first data avaible, to avoid errors
                 first_date = data.index[0]
@@ -761,7 +761,7 @@ def Simple_strategy():
     Text(f"\nEnd of the relevation: {end}")
     year = 0
     try:
-        data = yf.download(ticker)
+        data = yf.download(ticker, period = "1mo")
         if not data.empty:
             # Find the first data avaible, to avoid errors
             first_date = data.index[0]
@@ -1325,7 +1325,7 @@ def Advanced_Strategy():
         Text(f"\nEnd of the relevation: {end}")
         year = 0
         try:
-            data = yf.download(ticker)
+            data = yf.download(ticker, period = "1mo")
             if not data.empty:
                 # Find the first data avaible, to avoid errors
                 first_date = data.index[0]
