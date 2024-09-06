@@ -2016,7 +2016,7 @@ def Home():
     Text("2) Obsolescence", "#ffffff")
     Text("Everything can change in a moment in our life, and this is it as well for financial market. Maybe you developed a strong and statistical based strategy, but this could \"break\" and not make money anymore if the behaviour of the markets changes (and if your strategy is based in the specific behaviour that changed).")
     Text("The causes are usually easy to explain once it happened, but it is never easy to prevent it!")
-    Text("3) Stability", "ffffff")
+    Text("3) Stability", "#ffffff")
     Text("It is correlated to the previous point. To make it short, if a strategy performes bad in Genuary, February, April and May but it performs very well in March, 80% of the time it is luck, and only in a small percentage of cases it performes well because of specific factor that should be considered.") 
     Text("4) Risk Consideration", "#ffffff")
     Text("Maybe everything is perfect in your strategy and could make a lot of money, but maybe what could ruin everything is the lack of consideration of how much to risk in every position, your maximum exposure or how your different strategies/assets can interact with each other in terms of performance.")
