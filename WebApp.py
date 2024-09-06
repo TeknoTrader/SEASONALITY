@@ -2022,8 +2022,8 @@ def Home():
     Text("Maybe everything is perfect in your strategy and could make a lot of money, but maybe what could ruin everything is the lack of consideration of how much to risk in every position, your maximum exposure or how your different strategies/assets can interact with each other in terms of performance.")
     Text("This is really common, and you have to consider that TRADING IS A SURVIVAL GAME that involves money as your primary resource: that is why you have first of all to think about how to prevent losing money, and than eventually on how to do it!")
     Text("5) Out-of-sample necessity", "#ffffff")
-    Text("To see if the strategy could be applied today, you should never start with backtesting from (for example) 1990 to today, because in this way you could be victim of the "Overfitting", which is when you optimize too much the strategy based on the past performances and if the market changes his behaviour in a minimum way the strategy would perform in a completely different way.")
-    Text("It is like someone who prepared for a school exam studying with the past tests' questions: if the school professor changes, he probably will not pass the exam, because he is prepared only to "comfortable scenarios".")
+    Text("To see if the strategy could be applied today, you should never start with backtesting from (for example) 1990 to today, because in this way you could be victim of the \"Overfitting\", which is when you optimize too much the strategy based on the past performances and if the market changes his behaviour in a minimum way the strategy would perform in a completely different way.")
+    Text("It is like someone who prepared for a school exam studying with the past tests' questions: if the school professor changes, he probably will not pass the exam, because he is prepared only to \"comfortable scenarios\".")
     Text("In order to prevent that, you could just backtest from 1990 to 2018 (for example), and then see if the simulation between 2018 and today gives results that are similar to the previous backtest: that would be a good thing!")
     st.divider()
 
