@@ -2115,19 +2115,19 @@ pagine = {
 # Navigation between pages
 def go_to_home():
     st.session_state.selezione_pagina = "Home"
-    st.experimental_rerun()
+    st.rerun()
 
 def go_to_analysis():
     st.session_state.selezione_pagina = "Analysis"
-    st.experimental_rerun()
+    st.rerun()
 
 def go_to_basic_strategy():
     st.session_state.selezione_pagina = "Basic Strategy"
-    st.experimental_rerun()
+    st.rerun()
 
 def go_to_credits():
     st.session_state.selezione_pagina = "Credits"
-    st.experimental_rerun()
+    st.rerun()
 
 def nav_buttons(Page_Not_to_Be_Considered):
     pagine_da_mostrare = [p for p in pagine.keys() if p != Page_Not_to_Be_Considered]
@@ -2135,7 +2135,7 @@ def nav_buttons(Page_Not_to_Be_Considered):
     for idx, page in enumerate(pagine_da_mostrare):
         if cols[idx].button(page, key=f"nav_{page}_{st.session_state.selezione_pagina}"):
             st.session_state.selezione_pagina = page
-            st.experimental_rerun()
+            st.rerun()
 
 
 def sidebar_nav():
@@ -2158,7 +2158,7 @@ def sidebar_nav():
             with col2:
                 if st.button(page, key=f"sidebar_{page}"):
                     st.session_state.selezione_pagina = page
-                    st.experimental_rerun()
+                    st.rerun()
 
             # Closing
             st.markdown("""
