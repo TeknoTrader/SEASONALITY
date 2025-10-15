@@ -6,7 +6,7 @@ This tool helps traders and analysts identify market tendencies, develop data-dr
 ## 🌐 Live Demo
 
 **Try it now:** [web app link](https://seasonalityanalysis.streamlit.app/)
-No installation required — start analyzing market seasonality immediately in your browser!
+with no installation required — start analyzing market seasonality immediately in your browser!
 
 ---
 
