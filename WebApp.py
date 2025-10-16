@@ -1875,11 +1875,19 @@ def credits():
             </style>
             <p class="colored-text">{text} <a href="{url}">{link_text}</a></p>
             """, unsafe_allow_html=True)
+    #Text3("Who built this web application?", "#ffffff")
+    #Text2("I'm Nicola Chimenti and I love finance, programming and Data Science.")
+    #Text2("My main goal is to break into a Quantitative Trading Firm as trader or strategy validator.")
+    #st.image("https://i.postimg.cc/7LynpkrL/Whats-App-Image-2024-07-27-at-16-36-44.jpg")  # caption="My name is Nicola Chimenti.\nI'm currently pursuing a degree in \"Digital Economics\" and I love finance, programming and Data Science" , use_column_width=True)
+    #Text2("I'm currently pursuing a degree in \"Digital Economics\" and I program trading softwares for traders who want to automatize their strategy or analyze certain data to find a better statistical hedge")
     Text3("Who built this web application?", "#ffffff")
-    Text2("I'm Nicola Chimenti and I love finance, programming and Data Science.")
-    Text2("My main goal is to break into a Quantitative Trading Firm as trader or strategy validator.")
-    st.image("https://i.postimg.cc/7LynpkrL/Whats-App-Image-2024-07-27-at-16-36-44.jpg")  # caption="My name is Nicola Chimenti.\nI'm currently pursuing a degree in \"Digital Economics\" and I love finance, programming and Data Science" , use_column_width=True)
-    Text2("I'm currently pursuing a degree in \"Digital Economics\" and I program trading softwares for traders who want to automatize their strategy or analyze certain data to find a better statistical hedge")
+    Text2("I’m Nicola Chimenti — Business Analyst & MQL Developer.")
+    Text2("My mission is to improve business efficiency and enable traders to succeed through data analysis and automation of key processes.")
+    st.image("https://i.postimg.cc/7LynpkrL/Whats-App-Image-2024-07-27-at-16-36-44.jpg")  # caption="My name is Nicola Chimenti. \
+    # I have a degree in Business Management, Digital Economy track, and I love finance, programming, and Data Science.", use_column_width=True)
+    Text2("I hold a degree in Business Management with specialization in Digital Economy, and I support two main groups:")
+    Text2("1. Businesses aiming to enhance performance through data-driven insights and automating critical operations.")
+    Text2("2. Traders who want to automate their strategies or analyze data to achieve better statistical edge.")
 
     st.divider()
     Text3("CONTACT ME", "#ffffff")
