@@ -264,7 +264,7 @@ Distributed under the **MIT License** — free to use, modify, and share with pr
 **Nicola Chimenti**  
 Business Analyst & MQL Developer
 
-🎓 Student of Digital Economics  
+🎓 Graduated in Business Management
 💼 Trading Software Developer specializing in strategy automation
 
 🌐 [MQL5 Profile](https://www.mql5.com/it/users/teknotrader/seller#!category=2)  
