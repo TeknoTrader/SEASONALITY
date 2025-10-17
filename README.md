@@ -262,7 +262,7 @@ Distributed under the **MIT License** — free to use, modify, and share with pr
 ## 👤 Author
 
 **Nicola Chimenti**  
-Quantitative Trading Enthusiast & Financial Software Developer
+Business Analyst & MQL Developer
 
 🎓 Student of Digital Economics  
 💼 Trading Software Developer specializing in strategy automation
